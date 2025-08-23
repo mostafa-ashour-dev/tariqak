@@ -12,8 +12,9 @@ app.use(cookieParser());
 
 // Routes
 
-
 // App initialization
 app.listen(PORT, () => {
-    console.log(`Server is running on: http://localhost:${PORT}\nEnvironment: ${NODE_ENV}\n`);
+    console.log(
+        `Server is running on: http://localhost:${PORT}\nEnvironment: ${NODE_ENV}\n`
+    );
 });

@@ -7,10 +7,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./src/index.js",
-    "dev": "npx nodemon ./src/index.js",
-    "lint": "npx eslint .",
-    "lint:fix": "npx eslint . --fix",
-    "format": "npx prettier --write src/**/**/**/**/*.js",
+    "dev": "nodemon ./src/index.js",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write src/**/**/**/**/*.js",
     "ngrok": "npx ngrok http 4777"
   },
   "keywords": [],
