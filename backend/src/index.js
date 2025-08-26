@@ -4,24 +4,20 @@ import cookieParser from "cookie-parser";
 import { NODE_ENV, PORT } from "./config/env.config";
 import connectDB from "./database/connect.db";
 import errorHandler from "../../../../ecaw-dev/projects/AcalynIQ/server/src/errors/errorHandler";
-import ResponseError from "./classes/response-error.class";
+import routes from "./router/main.routes";
+import messingBodyMiddleware from "./middlewares/missing-body.middleware";
 
 const app = express();
 
 // Middlewares
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(messingBodyMiddleware);
 
 // Routes
-app.get("/", (req, res) => {
-    const { pass } = req.query;
-    if (pass === "tariqak") {
-        res.status(200).json({ message: "Welcome to AcalynIQ API" });
-        return;
-    }
-    throw new ResponseError(401, "error", "Unauthorized");
-});
+app.use("/api/v1", routes);
 
 // Error handler
 app.use(errorHandler);

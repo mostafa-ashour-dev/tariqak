@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
-import { EMAIL_REGEX, PASSWORD_REGEX } from "../validtions/user.validation";
+import { EMAIL_REGEX, PASSWORD_REGEX } from "../../validations/user.validation";
+import generateRandomCode from "../../../utils/generate-random-code";
 
 const userSchema = mongoose.Schema(
     {
@@ -41,7 +42,7 @@ const userSchema = mongoose.Schema(
         password: {
             type: String,
             required: [true, "User password is required"],
-            minLength: 3,
+            minLength: 8,
             maxLength: 255,
             validate: {
                 validator: (value) => {
@@ -97,9 +98,25 @@ const userSchema = mongoose.Schema(
             type: Date,
             default: null,
         },
+        last_login: {
+            type: Date,
+            default: null,
+        },
     },
     { timestamps: true }
 );
+
+userSchema.index({ full_name: "text" });
+userSchema.index({ username: "text" });
+
+userSchema.methods.setVerificationCode = async function () {
+    this.verification_code = generateRandomCode();
+    this.verification_code_expiration = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes
+
+    this.save();
+
+    return this.verification_code;
+};
 
 const User = mongoose.model("User", userSchema);
 export default User;
