@@ -47,7 +47,11 @@ const driverOnboarding = async (req, res) => {
     const existingDriver = await Driver.findOne({ user: user._id });
 
     if (existingDriver) {
-        throw new ResponseError(400, "Input Error", "User is already onboarded");
+        throw new ResponseError(
+            400,
+            "Input Error",
+            "User is already onboarded"
+        );
     }
 
     const driver = await Driver.create({

@@ -7,6 +7,7 @@ import slugify from "slugify";
 import crypto from "crypto";
 import { generateToken } from "../../utils/generate-token.util";
 import Session from "../../models/schemas/auth/session.model";
+import Driver from "../../models/schemas/auth/driver.model";
 
 const register = async (req, res) => {
     const { full_name, phone_number, email, password, role } = req.body || {};
@@ -168,7 +169,11 @@ const refresh = async (req, res) => {
 
     const findUser = await User.findById(user._id);
     if (!findUser) {
-        throw new ResponseError(400, "Input Error", "User not found or refresh token invalid");
+        throw new ResponseError(
+            400,
+            "Input Error",
+            "User not found or refresh token invalid"
+        );
     }
 
     const session = await Session.findOne({
@@ -191,14 +196,18 @@ const refresh = async (req, res) => {
     session.expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
     await session.save();
 
-    res.status(200).json({
-        success: true,
-        type: "success",
-        message: "Token refreshed successfully",
+    const data = {
         tokens: {
             access_token: accessToken,
             refresh_token: refreshToken,
         },
+    };
+
+    res.status(200).json({
+        success: true,
+        type: "success",
+        message: "Token refreshed successfully",
+        data,
     });
 };
 
@@ -216,7 +225,11 @@ const login = async (req, res) => {
     }
 
     const user = await User.findOne({
-        $or: [{ email: credential }, { phone_number: credential }],
+        $or: [
+            { email: credential },
+            { username: credential },
+            { phone_number: credential },
+        ],
     });
 
     if (!user) {
@@ -266,15 +279,42 @@ const login = async (req, res) => {
     user.last_login = Date.now();
     await user.save();
 
-    res.status(200).json({
-        success: true,
-        type: "success",
-        message: "User logged in successfully",
-        user,
+    const objUser = user.toJSON();
+    delete objUser.password;
+    delete objUser.verification_code;
+    delete objUser.reset_password_code;
+    delete objUser.reset_password_expiration;
+    delete objUser.verification_code_expiration;
+
+    if (user.role === "driver") {
+        const findDriver = await Driver.findOne({ user: user._id });
+        if (!findDriver) {
+            throw new ResponseError(400, "Input Error", "Driver not found");
+        }
+
+        const objDriver = findDriver.toJSON();
+        delete objDriver.user;
+        delete objDriver.license_image;
+        delete objDriver._id;
+
+        objUser.role_data = objDriver;
+    } else {
+        objUser.role_data = null;
+    }
+
+    const data = {
+        user: objUser,
         tokens: {
             access_token: accessToken,
             refresh_token: refreshToken,
         },
+    };
+
+    res.status(200).json({
+        success: true,
+        type: "success",
+        message: "User logged in successfully",
+        data,
     });
 };
 

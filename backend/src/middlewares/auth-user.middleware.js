@@ -6,7 +6,7 @@ import {
 import jwt from "jsonwebtoken";
 
 const authUser =
-    (type = "access", role) =>
+    (role, type = "access") =>
     (req, res, next) => {
         const authorizationHeader = req.headers.authorization;
         if (!authorizationHeader) {
