@@ -23,7 +23,7 @@ const userSchema = mongoose.Schema(
             type: String,
             required: [true, "User phone_number is required"],
             trim: true,
-            match: /^01[0-2,5]{1}[0-9]{8}$/,
+            match: /^0?1[0-2,5][0-9]{8}$/,
         },
         email: {
             type: String,
@@ -90,11 +90,11 @@ const userSchema = mongoose.Schema(
             type: Date,
             default: null,
         },
-        reset_password_token: {
+        reset_password_code: {
             type: String,
             default: "",
         },
-        reset_password_token_expiration: {
+        reset_password_expiration: {
             type: Date,
             default: null,
         },
@@ -109,13 +109,22 @@ const userSchema = mongoose.Schema(
 userSchema.index({ full_name: "text" });
 userSchema.index({ username: "text" });
 
-userSchema.methods.setVerificationCode = async function () {
-    this.verification_code = generateRandomCode();
-    this.verification_code_expiration = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes
+userSchema.methods.setRandomCode = async function (type) {
+    const expirationDate = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes
+    const randomCode = generateRandomCode();
+    let code = "";
+    if (type === "password_reset") {
+        this.reset_password_code = randomCode;
+        this.reset_password_expiration = expirationDate;
+        code = this.reset_password_code;
+    } else {
+        this.verification_code = randomCode;
+        this.verification_code_expiration = expirationDate;
+        code = this.verification_code;
+    }
 
     this.save();
-
-    return this.verification_code;
+    return code;
 };
 
 const User = mongoose.model("User", userSchema);

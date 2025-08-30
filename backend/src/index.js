@@ -9,7 +9,7 @@ import messingBodyMiddleware from "./middlewares/missing-body.middleware";
 
 const app = express();
 
-// Middlewares 
+// Middlewares
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
