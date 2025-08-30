@@ -6,7 +6,7 @@ import {
 import jwt from "jsonwebtoken";
 
 const authUser =
-    (role, type = "access") =>
+    (role = "all", type = "access") =>
     (req, res, next) => {
         const authorizationHeader = req.headers.authorization;
         if (!authorizationHeader) {
@@ -44,11 +44,11 @@ const authUser =
             delete decodedUser.exp;
             req.user = decodedUser;
 
-            if (role && decodedUser.role !== role) {
+            if (role && role !== "all" && decodedUser.role !== role) {
                 throw new ResponseError(
                     403,
                     "Auth Error",
-                    `Unauthorized - User is not an ${role}`
+                    `Unauthorized - User is not ${role}`
                 );
             }
         } catch (error) {

@@ -8,7 +8,7 @@ import { authUser } from "../../../middlewares/auth-user.middleware";
 /* /api/v1/onboarding/driver - POST */
 router.post(
     "/driver",
-    authUser("access", "driver"),
+    authUser("driver", "access"),
     expressAsyncHandler(driverOnboarding)
 );
 

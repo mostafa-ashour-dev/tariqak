@@ -28,7 +28,7 @@ router.post("/logout", authUser(), expressAsyncHandler(logout));
 
 // Refresh
 /* /api/v1/auth/refresh - GET */
-router.get("/refresh", authUser("", "refresh"), expressAsyncHandler(refresh));
+router.get("/refresh", authUser("all", "refresh"), expressAsyncHandler(refresh));
 
 // Verify
 /* /api/v1/auth/verify - POST */
