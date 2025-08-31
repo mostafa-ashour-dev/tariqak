@@ -1,11 +1,20 @@
 import ResponseError from "../classes/response-error.class";
 
-const PATHS_WITH_NO_BODY = ["/auth/logout", "/auth/refresh"];
+const PATHS_WITH_NO_BODY = [
+    "/auth/logout",
+    "/auth/refresh",
+    "/profile/auth",
+    "/profile/public",
+];
 
 const messingBodyMiddleware = (req, res, next) => {
     const path = req.originalUrl.split("/");
     const lastPath = "/" + path.splice(path.length - 2, 2).join("/");
 
+    if (req.method === "GET") {
+        next();
+        return;
+    }
     if (PATHS_WITH_NO_BODY.includes(lastPath.trim())) {
         next();
         return;

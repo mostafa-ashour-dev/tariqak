@@ -5,8 +5,10 @@ import {
     logout,
     refresh,
     register,
-    sendCode,
-    verify,
+    requestPasswordResetCode,
+    requestVerificationCode,
+    verifyCode,
+    resetPassword,
 } from "../../../controllers/auth/auth.controller";
 import { authUser } from "../../../middlewares/auth-user.middleware";
 
@@ -26,18 +28,32 @@ router.post("/logout", authUser(), expressAsyncHandler(logout));
 
 // Refresh
 /* /api/v1/auth/refresh - GET */
-router.get("/refresh", authUser("refresh"), expressAsyncHandler(refresh));
+router.get(
+    "/refresh",
+    authUser("all", "refresh"),
+    expressAsyncHandler(refresh)
+);
 
 // Verify
 /* /api/v1/auth/verify - POST */
-router.post("/verify", expressAsyncHandler(verify));
+router.post("/verify/:type", expressAsyncHandler(verifyCode));
 
 // Send Verification Code
 /* /api/v1/auth/Send Verification Code - POST */
-router.post("/send-code", expressAsyncHandler(sendCode));
+router.post(
+    "/request-verification-code",
+    expressAsyncHandler(requestVerificationCode)
+);
+
+// Send Verification Code
+/* /api/v1/auth/request-password-code - POST */
+router.post(
+    "/request-password-code",
+    expressAsyncHandler(requestPasswordResetCode)
+);
 
 // Reset Password
 /* /api/v1/auth/reset-password - POST */
-router.post("/reset-password", expressAsyncHandler());
+router.post("/reset-password", expressAsyncHandler(resetPassword));
 
 export default router;

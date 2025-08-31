@@ -1,4 +1,6 @@
 import mongoose from "mongoose";
+import slugify from "slugify";
+import crypto from "crypto";
 
 const workShopSchema = mongoose.Schema(
     {
@@ -6,7 +8,6 @@ const workShopSchema = mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
             required: true,
-            unique: true,
         },
         title: {
             type: String,
@@ -17,10 +18,7 @@ const workShopSchema = mongoose.Schema(
         },
         title_slug: {
             type: String,
-            required: [true, "WorkShop title_slug is required"],
             trim: true,
-            minLength: 3,
-            maxLength: 255,
         },
         description: {
             type: String,
@@ -33,8 +31,25 @@ const workShopSchema = mongoose.Schema(
             type: [String],
             default: [],
         },
-        features: {
-            type: [String],
+        services: {
+            type: [
+                {
+                    title: {
+                        type: String,
+                        required: [true, "Service title is required"],
+                        trim: true,
+                        minLength: 3,
+                        maxLength: 255,
+                    },
+                    description: {
+                        type: String,
+                        required: [true, "Service description is required"],
+                        trim: true,
+                        minLength: 3,
+                        maxLength: 2500,
+                    },
+                },
+            ],
             default: [],
         },
         rating: {
@@ -47,14 +62,16 @@ const workShopSchema = mongoose.Schema(
         },
         locations: [
             {
-                type: {
-                    type: String,
-                    enum: ["Point"],
-                    default: "Point",
-                },
-                coordinates: {
-                    type: [Number],
-                    required: true,
+                location: {
+                    type: {
+                        type: String,
+                        enum: ["Point"],
+                        default: "Point",
+                    },
+                    coordinates: {
+                        type: [Number],
+                        required: true,
+                    },
                 },
                 address: {
                     type: String,
@@ -66,9 +83,22 @@ const workShopSchema = mongoose.Schema(
     { timestamps: true }
 );
 
-workShopSchema.index({ "locations.coordinates": "2dsphere" });
+workShopSchema.index({ "locations.location": "2dsphere" });
 workShopSchema.index({ title: "text", description: "text" });
 workShopSchema.index({ title_slug: 1 }, { unique: true });
+
+workShopSchema.pre("save", function (next) {
+    const slugifiedTitle = slugify(this.title, {
+        lower: true,
+        strict: true,
+        remove: /[*+~.()'"!:@]/g,
+    });
+
+    const sufixedSlug =
+        slugifiedTitle + "-" + crypto.randomBytes(4).toString("hex");
+    this.title_slug = sufixedSlug;
+    next();
+});
 
 const WorkShop = mongoose.model("WorkShop", workShopSchema);
 export default WorkShop;
