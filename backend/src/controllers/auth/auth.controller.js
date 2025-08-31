@@ -46,11 +46,18 @@ const register = async (req, res) => {
         throw new ResponseError(400, "Input Error", "User already exists");
     }
 
+    let correctedPhoneNumber = phone_number;
+    if (phone_number.startsWith("20")) {
+        correctedPhoneNumber = phone_number.slice(2);
+    } else if (phone_number.startsWith("0")) {
+        correctedPhoneNumber = phone_number.slice(1);
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
     await User.create({
         full_name,
-        phone_number,
+        phone_number: correctedPhoneNumber,
         username,
         email,
         password: hashedPassword,
@@ -64,6 +71,7 @@ const register = async (req, res) => {
         success: true,
         type: "success",
         message: "User registered successfully",
+        data: null,
     });
 };
 
@@ -189,8 +197,8 @@ const refresh = async (req, res) => {
         );
     }
 
-    const accessToken = generateToken({ user, type: "access" });
-    const refreshToken = generateToken({ user, type: "refresh" });
+    const accessToken = generateToken({ user: findUser, type: "access" });
+    const refreshToken = generateToken({ user: findUser, type: "refresh" });
 
     session.refresh_token = refreshToken;
     session.expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
@@ -224,11 +232,18 @@ const login = async (req, res) => {
         );
     }
 
+    let correctedPhoneNumber = credential;
+    if (credential.startsWith("20")) {
+        correctedPhoneNumber = credential.slice(2);
+    } else if (credential.startsWith("0")) {
+        correctedPhoneNumber = credential.slice(1);
+    }
+
     const user = await User.findOne({
         $or: [
             { email: credential },
             { username: credential },
-            { phone_number: credential },
+            { phone_number: correctedPhoneNumber },
         ],
     });
 
@@ -288,16 +303,16 @@ const login = async (req, res) => {
 
     if (user.role === "driver") {
         const findDriver = await Driver.findOne({ user: user._id });
-        if (!findDriver) {
-            throw new ResponseError(400, "Input Error", "Driver not found");
+        if (findDriver) {
+            const objDriver = findDriver.toJSON();
+            delete objDriver.user;
+            delete objDriver.license_image;
+            delete objDriver._id;
+
+            objUser.role_data = objDriver;
+        } else {
+            objUser.role_data = null;
         }
-
-        const objDriver = findDriver.toJSON();
-        delete objDriver.user;
-        delete objDriver.license_image;
-        delete objDriver._id;
-
-        objUser.role_data = objDriver;
     } else {
         objUser.role_data = null;
     }
@@ -335,6 +350,7 @@ const logout = async (req, res) => {
         success: true,
         type: "success",
         message: "User logged out successfully",
+        data: null,
     });
 };
 
@@ -366,6 +382,7 @@ const requestPasswordResetCode = async (req, res) => {
         success: true,
         type: "success",
         message: "Password reset code sent successfully",
+        data: null,
     });
 };
 
@@ -411,6 +428,7 @@ const resetPassword = async (req, res) => {
         success: true,
         type: "success",
         message: "Password reset successfully",
+        data: null,
     });
 };
 

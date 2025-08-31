@@ -1,5 +1,10 @@
 import mongoose from "mongoose";
-import { EMAIL_REGEX, PASSWORD_REGEX } from "../../validations/user.validation";
+import {
+    EMAIL_REGEX,
+    PASSWORD_REGEX,
+    PHONE_NUMBER_REGEX,
+    USERNAME_REGEX,
+} from "../../validations/user.validation";
 import generateRandomCode from "../../../utils/generate-random-code";
 
 const userSchema = mongoose.Schema(
@@ -16,14 +21,17 @@ const userSchema = mongoose.Schema(
             required: [true, "User username is required"],
             trim: true,
             unique: true,
+            match: USERNAME_REGEX,
             minLength: 3,
             maxLength: 255,
+            lowercase: true,
         },
         phone_number: {
             type: String,
             required: [true, "User phone_number is required"],
             trim: true,
-            match: /^0?1[0-2,5][0-9]{8}$/,
+            match: PHONE_NUMBER_REGEX,
+            unique: true,
         },
         email: {
             type: String,

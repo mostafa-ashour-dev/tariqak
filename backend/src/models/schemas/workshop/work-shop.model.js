@@ -62,14 +62,16 @@ const workShopSchema = mongoose.Schema(
         },
         locations: [
             {
-                type: {
-                    type: String,
-                    enum: ["Point"],
-                    default: "Point",
-                },
-                coordinates: {
-                    type: [Number],
-                    required: true,
+                location: {
+                    type: {
+                        type: String,
+                        enum: ["Point"],
+                        default: "Point",
+                    },
+                    coordinates: {
+                        type: [Number],
+                        required: true,
+                    },
                 },
                 address: {
                     type: String,
@@ -81,7 +83,7 @@ const workShopSchema = mongoose.Schema(
     { timestamps: true }
 );
 
-workShopSchema.index({ "locations.coordinates": "2dsphere" });
+workShopSchema.index({ "locations.location": "2dsphere" });
 workShopSchema.index({ title: "text", description: "text" });
 workShopSchema.index({ title_slug: 1 }, { unique: true });
 

@@ -63,7 +63,12 @@ const driverOnboarding = async (req, res) => {
         car_color,
         active_period,
         active_all_day,
-        areas,
+        areas: areas.map((area) => ({
+            location: {
+                type: "Point",
+                coordinates: [area.location.coordinates.longitude, area.location.coordinates.latitude],
+            }, name: area.name
+        })),
     });
 
     existingUser.is_onboarded = true;
@@ -73,6 +78,7 @@ const driverOnboarding = async (req, res) => {
         success: true,
         type: "success",
         message: "Driver onboarding successful",
+        data: null,
     });
 };
 

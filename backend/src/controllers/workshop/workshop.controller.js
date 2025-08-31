@@ -48,15 +48,19 @@ const createWorkshop = async (req, res) => {
         success: true,
         type: "success",
         message: "Workshop created successfully",
+        data: null,
     });
 };
 
 const getWorkshop = async (req, res) => {
-
     const { workshopSlug } = req.params;
 
     if (!workshopSlug) {
-        throw new ResponseError(400, "Input Error", "Workshop slug is required");
+        throw new ResponseError(
+            400,
+            "Input Error",
+            "Workshop slug is required"
+        );
     }
 
     const findWorkshop = await Workshop.findOne({ title_slug: workshopSlug });
@@ -68,7 +72,7 @@ const getWorkshop = async (req, res) => {
         success: true,
         type: "success",
         message: "Workshop fetched successfully",
-        data: findWorkshop
+        data: findWorkshop,
     });
 };
 
