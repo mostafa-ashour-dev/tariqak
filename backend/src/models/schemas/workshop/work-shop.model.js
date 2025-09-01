@@ -1,8 +1,9 @@
 import mongoose from "mongoose";
 import slugify from "slugify";
 import crypto from "crypto";
+import Review from "../review/review.model";
 
-const workShopSchema = mongoose.Schema(
+const workshopSchema = mongoose.Schema(
     {
         user: {
             type: mongoose.Schema.Types.ObjectId,
@@ -83,22 +84,44 @@ const workShopSchema = mongoose.Schema(
     { timestamps: true }
 );
 
-workShopSchema.index({ "locations.location": "2dsphere" });
-workShopSchema.index({ title: "text", description: "text" });
-workShopSchema.index({ title_slug: 1 }, { unique: true });
+workshopSchema.index({ "locations.location": "2dsphere" });
+workshopSchema.index({ title: "text", description: "text" });
+workshopSchema.index({ title_slug: 1 }, { unique: true });
 
-workShopSchema.pre("save", function (next) {
+workshopSchema.methods.updateTitleSlug = async function (newTitle) {
     const slugifiedTitle = slugify(this.title, {
         lower: true,
         strict: true,
         remove: /[*+~.()'"!:@]/g,
     });
 
+    if (this.title === newTitle) return;
+
     const sufixedSlug =
         slugifiedTitle + "-" + crypto.randomBytes(4).toString("hex");
     this.title_slug = sufixedSlug;
-    next();
-});
 
-const WorkShop = mongoose.model("WorkShop", workShopSchema);
+    await this.save();
+};
+
+workshopSchema.methods.updateRating = async function () {
+    const reviews = await Review.find({
+        "reference.type": "workshop",
+        "reference.target": this._id,
+    });
+
+    if (!reviews.length) {
+        this.rating = 0;
+        await this.save();
+        return;
+    }
+
+    const rating =
+        reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length;
+
+    this.rating = rating;
+    await this.save();
+};
+
+const WorkShop = mongoose.model("WorkShop", workshopSchema);
 export default WorkShop;

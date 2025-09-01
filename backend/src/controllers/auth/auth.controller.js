@@ -92,6 +92,13 @@ const requestVerificationCode = async (req, res) => {
         throw new ResponseError(400, "Input Error", "Invalid type");
     }
 
+    if (type === "phone_number") {
+        if (credential.startsWith("20")) {
+            credential = credential.slice(2);
+        } else if (credential.startsWith("0")) {
+            credential = credential.slice(1);
+        }
+    }
     const user = await User.findOne({ [type]: credential });
     if (!user) {
         throw new ResponseError(400, "Input Error", "User not found");
@@ -367,6 +374,18 @@ const requestPasswordResetCode = async (req, res) => {
         );
     }
 
+    if (type !== "email" && type !== "phone_number") {
+        throw new ResponseError(400, "Input Error", "Invalid type");
+    }
+
+    if (type === "phone_number") {
+        if (credential.startsWith("20")) {
+            credential = credential.slice(2);
+        } else if (credential.startsWith("0")) {
+            credential = credential.slice(1);
+        }
+    }
+
     const user = await User.findOne({
         $or: [{ email: credential }, { phone_number: credential }],
     });
@@ -401,6 +420,12 @@ const resetPassword = async (req, res) => {
             "Input Error",
             "Missing fields: " + missingFields.join(", ")
         );
+    }
+
+    if (credential.startsWith("20")) {
+        credential = credential.slice(2);
+    } else if (credential.startsWith("0")) {
+        credential = credential.slice(1);
     }
 
     const user = await User.findOne({

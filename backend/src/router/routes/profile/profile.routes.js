@@ -37,8 +37,5 @@ router.put(
 
 // Get Nearby Drivers
 /* /api/v1/profile/drivers - GET */
-router.get(
-    "/drivers",
-    expressAsyncHandler(getNearbyDrivers)
-)
+router.get("/drivers", expressAsyncHandler(getNearbyDrivers));
 export default router;

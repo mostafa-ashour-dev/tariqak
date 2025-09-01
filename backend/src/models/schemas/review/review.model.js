@@ -6,18 +6,19 @@ const reviewSchema = mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
             required: true,
-            unique: true,
         },
         reference: {
-            type: String,
-            enum: ["driver", "workshop"],
-            required: [true, "Review reference is required"],
-            trim: true,
-        },
-        reference_id: {
-            type: String,
-            required: [true, "Review reference_id is required"],
-            trim: true,
+            type: {
+                type: String,
+                required: [true, "Review reference type is required"],
+                trim: true,
+                enum: ["driver", "workshop"],
+            },
+            target: {
+                type: mongoose.Schema.Types.ObjectId,
+                required: [true, "Review reference target is required"],
+                trim: true,
+            }
         },
         rating: {
             type: Number,
