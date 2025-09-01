@@ -1,9 +1,21 @@
 import ResponseError from "../classes/response-error.class";
 
-const paginateResults = async ({model, query = {}, page = 1, limit = 10, populate = [], select = "" }) => {
+const paginateResults = async ({
+    model,
+    query = {},
+    page = 1,
+    limit = 10,
+    populate = [],
+    select = "",
+}) => {
     try {
-        const skip = (page - 1) * limit;
-        const results = await model.find(query).skip(skip).limit(limit).populate(populate, select).lean();
+        const skip = (parseInt(page, 10) - 1) * parseInt(limit, 10);
+        const results = await model
+            .find(query)
+            .skip(skip)
+            .limit(limit)
+            .populate(populate, select)
+            .lean();
         const total = await model.countDocuments();
         const totalPages = Math.ceil(total / limit);
 
@@ -13,8 +25,8 @@ const paginateResults = async ({model, query = {}, page = 1, limit = 10, populat
         };
 
         const resultsData = {
-            ... pageInfo,
-            limit,
+            ...pageInfo,
+            limit: parseInt(limit, 10),
             total_count: total,
             total_pages: totalPages,
             results,
@@ -24,6 +36,6 @@ const paginateResults = async ({model, query = {}, page = 1, limit = 10, populat
     } catch (error) {
         throw new ResponseError(400, "Pagination Error", error.message);
     }
-}
+};
 
 export default paginateResults;

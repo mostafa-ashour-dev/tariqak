@@ -157,8 +157,14 @@ const editUserProfile = async (req, res) => {
 
 const editDriverProfile = async (req, res) => {
     const { user } = req;
-    const { car_model, car_plate, car_color, active_all_day, active_period, areas } =
-        req.body || {};
+    const {
+        car_model,
+        car_plate,
+        car_color,
+        active_all_day,
+        active_period,
+        areas,
+    } = req.body || {};
 
     const findUser = await User.findById(user._id);
     if (!findUser) {
@@ -197,9 +203,13 @@ const editDriverProfile = async (req, res) => {
                 areas: areas.map((area) => ({
                     location: {
                         type: "Point",
-                        coordinates: [area.location.coordinates.longitude, area.location.coordinates.latitude],
-                    }, name: area.name
-                }))
+                        coordinates: [
+                            area.location.coordinates.longitude,
+                            area.location.coordinates.latitude,
+                        ],
+                    },
+                    name: area.name,
+                })),
             },
         }
     );
@@ -213,8 +223,11 @@ const editDriverProfile = async (req, res) => {
 };
 
 const getNearbyDrivers = async (req, res) => {
-    const { location: { latitude, longitude }, radius = 5 } = req.body || {};
-    const {page = 1, limit = 10} = req.query || {}; 
+    const {
+        location: { latitude, longitude },
+        radius = 5,
+    } = req.body || {};
+    const { page = 1, limit = 10 } = req.query || {};
     const missingFields = returnMissingFields({ latitude, longitude });
 
     if (missingFields.length > 0) {
@@ -241,8 +254,8 @@ const getNearbyDrivers = async (req, res) => {
             },
         },
         page: page,
-        limit: limit
-    })
+        limit: limit,
+    });
 
     res.status(200).json({
         success: true,

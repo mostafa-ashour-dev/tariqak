@@ -87,18 +87,21 @@ workShopSchema.index({ "locations.location": "2dsphere" });
 workShopSchema.index({ title: "text", description: "text" });
 workShopSchema.index({ title_slug: 1 }, { unique: true });
 
-workShopSchema.pre("save", function (next) {
+workShopSchema.methods.updateTitleSlug = async function (newTitle) {
     const slugifiedTitle = slugify(this.title, {
         lower: true,
         strict: true,
         remove: /[*+~.()'"!:@]/g,
     });
 
+    if (this.title === newTitle) return;
+
     const sufixedSlug =
         slugifiedTitle + "-" + crypto.randomBytes(4).toString("hex");
     this.title_slug = sufixedSlug;
-    next();
-});
+
+    await this.save();
+};
 
 const WorkShop = mongoose.model("WorkShop", workShopSchema);
 export default WorkShop;
