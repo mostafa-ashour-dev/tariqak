@@ -16,6 +16,20 @@ const router = Router();
 
 // Regitster
 /* /api/v1/auth/register - POST */
+/**
+ * @openapi
+ * /api/v1/auth/register:
+ *   post:
+ *     tags:
+ *       - Auth
+ *     description: Register a new user
+ *     responses:
+ *       201:
+ *         description: User registered successfully
+ *       400:
+ *         description: Bad request
+ *
+*/
 router.post("/register", expressAsyncHandler(register));
 
 // Login

@@ -5,7 +5,7 @@ import {
     PHONE_NUMBER_REGEX,
     USERNAME_REGEX,
 } from "../../validations/user.validation";
-import generateRandomCode from "../../../utils/generate-random-code";
+import generateRandomCode from "../../../utils/generate-random-code.util";
 
 const userSchema = mongoose.Schema(
     {
