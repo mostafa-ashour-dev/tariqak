@@ -1,0 +1,645 @@
+{
+  "meta": {
+    "format": "httpie",
+    "version": "1.0.0",
+    "contentType": "workspace",
+    "schema": "https://schema.httpie.io/1.0.0.json",
+    "docs": "https://httpie.io/r/help/export-from-httpie",
+    "source": "HTTPie Desktop 2025.2.0"
+  },
+  "entry": {
+    "name": "Tariqak",
+    "icon": {
+      "name": "default",
+      "color": "green"
+    },
+    "collections": [
+      {
+        "name": "Authentication & Authorization",
+        "icon": {
+          "name": "lock",
+          "color": "red"
+        },
+        "auth": {
+          "type": "none"
+        },
+        "requests": [
+          {
+            "name": "Register",
+            "url": "{{base_url}}/auth/register",
+            "method": "POST",
+            "headers": [],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "text",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "{\n  \"full_name\": \"Mostafa Ahmed\",\n  \"phone_number\": \"1106548601\",\n  \"email\": \"codetutorial4web@gmail.com\",\n  \"password\": \"Passwor$d123\",\n  \"role\": \"driver\"\n}",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "Verify Verification Code",
+            "url": "{{base_url}}/auth/verify/verification_code",
+            "method": "POST",
+            "headers": [],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "text",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "{\n  \"code\": \"107382\"\n}",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "Send Verification Code",
+            "url": "{{base_url}}/auth/request-verification-code",
+            "method": "POST",
+            "headers": [],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "text",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "{\n  \"type\": \"phone_number\",\n  \"credential\": \"1106548601\"\n}",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "Login",
+            "url": "{{base_url}}/auth/login",
+            "method": "POST",
+            "headers": [],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "text",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "{\n  \"credential\": \"mostafa-ya-hama\",\n  \"password\": \"halaMadrid\"\n}",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "Logout",
+            "url": "{{base_url}}/auth/logout",
+            "method": "POST",
+            "headers": [],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "bearer",
+              "credentials": {
+                "username": "",
+                "password": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OGFjYTkxYTNmZTdjZGM5NGYyOGNkZGYiLCJpYXQiOjE3NTYyMTAzNzEsImV4cCI6MTc1NjIxMTI3MX0.MyStoySp16Vd4Bx2PXJmwculvZjKmWDzQozNTkJ8-iM"
+              },
+              "target": "headers"
+            },
+            "body": {
+              "type": "text",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "Refresh",
+            "url": "{{base_url}}/auth/refresh",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "bearer",
+              "credentials": {
+                "username": "",
+                "password": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OGIwNzI3ZjBjZDE2YjI2NDUwZGQ1ZmEiLCJpYXQiOjE3NTY2NDE5OTMsImV4cCI6MTc1NzI0Njc5M30.cZB50uZxJoIPIypD-terdL6mZ4ZCLx1ffo7j3WCPIlo"
+              },
+              "target": "headers"
+            },
+            "body": {
+              "type": "text",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "Verify Reset Password Code",
+            "url": "{{base_url}}/auth/verify/password_reset",
+            "method": "POST",
+            "headers": [],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "text",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "{\n  \"code\": \"102887\"\n}",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "Send Reset Password Code",
+            "url": "{{base_url}}/auth/request-password-code",
+            "method": "POST",
+            "headers": [],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "text",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "{\n  \"type\": \"phone_number\",\n  \"credential\": \"01069684627\"\n}",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "Reset Password",
+            "url": "{{base_url}}/auth/reset-password",
+            "method": "POST",
+            "headers": [],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "text",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "{\n  \"credential\": \"01069684627\",\n  \"code\": \"102887\",\n  \"new_password\": \"halaMadrid\"\n}",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "Onboarding",
+        "icon": {
+          "name": "circle",
+          "color": "green"
+        },
+        "auth": {
+          "type": "none"
+        },
+        "requests": [
+          {
+            "name": "Driver",
+            "url": "{{base_url}}/onboarding/driver",
+            "method": "POST",
+            "headers": [],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "bearer",
+              "credentials": {
+                "username": "",
+                "password": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OGIwNzI3ZjBjZDE2YjI2NDUwZGQ1ZmEiLCJyb2xlIjoiZHJpdmVyIiwiaWF0IjoxNzU2NjQxOTkzLCJleHAiOjE3NTY2NDI4OTN9.x5Z8VNNdVUEatx8nNkXdFQ4eQpcmFRS9Xv-W_QGbwBM"
+              },
+              "target": "headers"
+            },
+            "body": {
+              "type": "text",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "{\n  \"license_image\": \"http://localhost:3000\",\n  \"car_plate\": {\n    \"numbers\": \"1500\",\n    \"letters\": \"ب ح\"\n  },\n  \"car_model\": \"Actross 2010\",\n  \"car_color\": \"أخضر\",\n  \"active_period\": {\n    \"start\": \"11:30\",\n    \"end\": \"15:30\"\n  },\n  \"active_all_day\": false,\n  \"areas\": [{\n    \"name\": \"Cairo\",\n    \"location\": {\n        \"coordinates\": {\n          \"longitude\": 30.0444,\n          \"latitude\": 31.2357\n        }\n    }\n  }]\n}",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "Profile",
+        "icon": {
+          "name": "creditCard",
+          "color": "purple"
+        },
+        "auth": {
+          "type": "bearer",
+          "credentials": {
+            "username": "",
+            "password": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OGFmMDhiZTk1OTE3OWVjNzMxMDQ3ZDMiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTY2Mzg3NTMsImV4cCI6MTc1NjYzOTY1M30.iPvPwZVv875GmkZBuLLzi7nQWgv6PPFbSWel9O7rfkQ"
+          },
+          "target": "headers"
+        },
+        "requests": [
+          {
+            "name": "Profile Auth",
+            "url": "{{base_url}}/profile/auth",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "bearer",
+              "credentials": {
+                "username": "",
+                "password": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OGIwNzI3ZjBjZDE2YjI2NDUwZGQ1ZmEiLCJyb2xlIjoiZHJpdmVyIiwiaWF0IjoxNzU2NTQ1NjQyLCJleHAiOjE3NTY1NDY1NDJ9.Jkv90kcTsQvAQpyUL_MF0-U1Pvz9JhGQnZaY83-OU1I"
+              },
+              "target": "headers"
+            },
+            "body": {
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "Profile Public",
+            "url": "{{base_url}}/profile/public/mostafa-ahmed-f13d86b3",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "bearer",
+              "credentials": {
+                "username": "",
+                "password": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OGIwNzI3ZjBjZDE2YjI2NDUwZGQ1ZmEiLCJpYXQiOjE3NTY1NDk3ODAsImV4cCI6MTc1NjU1MDY4MH0.NU3GCEp5rPPL3n779ykmpqHKsW_ll_9KBiuGZHn9keA"
+              },
+              "target": "headers"
+            },
+            "body": {
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "Edit Personal Info",
+            "url": "{{base_url}}/profile/personal-info",
+            "method": "PUT",
+            "headers": [],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "text",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "{\n  \"username\": \"mostafa-ya-hama\",\n  \"full_name\": \"Mostafa Ashour\"\n}",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "Edit Driver Info",
+            "url": "{{base_url}}/profile/driver-info",
+            "method": "PUT",
+            "headers": [],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "bearer",
+              "credentials": {
+                "username": "",
+                "password": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OGIwNzI3ZjBjZDE2YjI2NDUwZGQ1ZmEiLCJyb2xlIjoiZHJpdmVyIiwiaWF0IjoxNzU2NjQyNTkwLCJleHAiOjE3NTY2NDM0OTB9.pzO7vOXxVa2sLqvuwW3jgFdosr1R5sukBmBBA67XqOI"
+              },
+              "target": "headers"
+            },
+            "body": {
+              "type": "text",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "{\n  \"car_plate\": {\n    \"numbers\": \"1500\",\n    \"letters\": \"م ج\"\n  },\n  \"car_color\": \"أصفر\",\n  \"areas\": [{\n    \"name\": \"Cairo\",\n    \"location\": {\n        \"coordinates\": {\n          \"longitude\": 30.0444,\n          \"latitude\": 31.2357\n        }\n    }\n  },\n  {\n    \"name\": \"6th Of October\",\n    \"location\": {\n        \"coordinates\": {\n          \"longitude\": 30.921919,\n          \"latitude\": 29.952654\n        }\n    }\n  }]\n}",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "Get Nearby Drivers",
+            "url": "{{base_url}}/profile/drivers",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "text",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "{\n  \"location\": {\n    \"longitude\": 31.0087636,\n    \"latitude\": 29.9549204\n  },\n  \"radius\": 10\n}",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "Workshop",
+        "icon": {
+          "name": "wrench",
+          "color": "blue"
+        },
+        "auth": {
+          "type": "bearer",
+          "credentials": {
+            "username": "",
+            "password": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OGFmMDhiZTk1OTE3OWVjNzMxMDQ3ZDMiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTY3MjI5NDMsImV4cCI6MTc1NjcyMzg0M30.0-fAXchN1IZkKE78dBHdMewumf1cya2VLT55EpZRe-E"
+          },
+          "target": "headers"
+        },
+        "requests": [
+          {
+            "name": "Create Workshop",
+            "url": "{{base_url}}/workshop/",
+            "method": "POST",
+            "headers": [],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "text",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "{\n  \"title\": \"ورشة مصطفى للصيانة الأسطورية\",\n  \"description\": \"عند مصطفى الأسطورة كل طلباتك محضورة\",\n  \"logo\": \"http://localhost:4777/assets/mostafa-alostora-888.svg\",\n  \"images\": [\"http://localhost:4777/assets/hj.png\"\n  ],\n  \"locations\": [{\n    \"address\": \"الجيزة - الجمالية - حي العبور\",\n    \"location\": {\n      \"coordinates\": [\n     30.0444, 31.2357\n    ]\n    }\n  }],\n  \"services\": [\n    {\n      \"title\": \"تصليح\",\n      \"description\": \"بنصلح عربيات حلو أوييي\"\n    }\n  ]\n}",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "Get Workshop",
+            "url": "{{base_url}}/workshop/wrshh-mstfa-llsyanh-alastwryh-3cca6e0f",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "none",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          },
+          {
+            "name": "Get Workshops",
+            "url": "{{base_url}}/workshop?limit=1",
+            "method": "GET",
+            "headers": [],
+            "queryParams": [],
+            "pathParams": [],
+            "auth": {
+              "type": "inherited"
+            },
+            "body": {
+              "type": "text",
+              "file": {
+                "name": ""
+              },
+              "text": {
+                "value": "{\n  \"title\": \"ورشة مصطفى للصيانة الأسطورية\",\n  \"description\": \"عند مصطفى الأسطورة كل طلباتك محضورة\",\n  \"logo\": \"http://localhost:4777/assets/mostafa-alostora-888.svg\",\n  \"images\": [\"http://localhost:4777/assets/hj.png\"\n  ],\n  \"locations\": [{\n    \"address\": \"الجيزة - الجمالية - حي العبور\",\n    \"coordinates\": [\n     30.0444, 31.2357\n    ]\n  }],\n  \"services\": [\n    {\n      \"title\": \"تصليح\",\n      \"description\": \"بنصلح عربيات حلو أوييي\"\n    }\n  ]\n}",
+                "format": "application/json"
+              },
+              "form": {
+                "isMultipart": false,
+                "fields": []
+              },
+              "graphql": {
+                "query": "",
+                "variables": ""
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "environments": [
+      {
+        "name": "Defaults",
+        "color": "gray",
+        "isDefault": true,
+        "isLocalOnly": false,
+        "variables": [
+          {
+            "name": "base_url",
+            "value": "http://localhost:4777/api/v1",
+            "isSecret": false
+          }
+        ]
+      }
+    ],
+    "drafts": []
+  }
+}
