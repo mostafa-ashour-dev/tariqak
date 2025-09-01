@@ -2,6 +2,7 @@ import ResponseError from "../../classes/response-error.class";
 import User from "../../models/schemas/auth/user.model";
 import Driver from "../../models/schemas/auth/driver.model";
 import returnMissingFields from "../../utils/missing-fields.util";
+import paginateResults from "../../utils/paginate-results.util";
 
 const getUserProfileAuth = async (req, res) => {
     const { user } = req;
@@ -212,8 +213,8 @@ const editDriverProfile = async (req, res) => {
 };
 
 const getNearbyDrivers = async (req, res) => {
-    const { latitude, longitude, radius = 5 } = req.body || {};
-
+    const { location: { latitude, longitude }, radius = 5 } = req.body || {};
+    const {page = 1, limit = 10} = req.query || {}; 
     const missingFields = returnMissingFields({ latitude, longitude });
 
     if (missingFields.length > 0) {
@@ -240,11 +241,30 @@ const getNearbyDrivers = async (req, res) => {
         throw new ResponseError(400, "Input Error", "No nearby drivers found");
     }
 
+    const paginatedData = await paginateResults({
+        model: Driver,
+        populate: "user",
+        select: "username full_name phone_number email avatar role",
+        query: {
+            "areas.location": {
+                $near: {
+                    $geometry: {
+                        type: "Point",
+                        coordinates: [longitude, latitude],
+                    },
+                    $maxDistance: radius * 1000,
+                },
+            },
+        },
+        page: page,
+        limit: limit
+    })
+
     res.status(200).json({
         success: true,
         type: "success",
         message: "Nearby drivers found successfully",
-        data: drivers,
+        data: paginatedData,
     });
 };
 
