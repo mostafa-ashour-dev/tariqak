@@ -2,6 +2,7 @@ import ResponseError from "../classes/response-error.class";
 
 const paginateResults = async ({
     model,
+    results,
     query = {},
     page = 1,
     limit = 10,
@@ -10,13 +11,13 @@ const paginateResults = async ({
 }) => {
     try {
         const skip = (parseInt(page, 10) - 1) * parseInt(limit, 10);
-        const results = await model
+        const results = model && await model
             .find(query)
             .skip(skip)
             .limit(limit)
             .populate(populate, select)
-            .lean();
-        const total = await model.countDocuments();
+            .lean() || results || [];
+        const total = model && await model.countDocuments() || results && results.length || 0;
         const totalPages = Math.ceil(total / limit);
 
         const pageInfo = {

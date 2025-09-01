@@ -261,7 +261,7 @@ const getNearbyDrivers = async (req, res) => {
         success: true,
         type: "success",
         message: "Nearby drivers found successfully",
-        data: paginatedData,
+        data: { ...paginatedData },
     });
 };
 
