@@ -225,22 +225,6 @@ const getNearbyDrivers = async (req, res) => {
         );
     }
 
-    const drivers = await Driver.find({
-        "areas.location": {
-            $near: {
-                $geometry: {
-                    type: "Point",
-                    coordinates: [longitude, latitude],
-                },
-                $maxDistance: radius * 1000,
-            },
-        },
-    }).populate("user", "username full_name phone_number email avatar role");
-
-    if (drivers.length === 0) {
-        throw new ResponseError(400, "Input Error", "No nearby drivers found");
-    }
-
     const paginatedData = await paginateResults({
         model: Driver,
         populate: "user",
