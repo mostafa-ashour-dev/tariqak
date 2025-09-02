@@ -1,13 +1,36 @@
 import { SplashScreen, Stack } from "expo-router";
 import React, { useEffect } from "react";
 import { useFonts } from "expo-font";
-import useAuth from "hooks/useAuth";
 import { ActivityIndicator, View } from "react-native";
+import AuthProvider, { useAuth } from "context/auth/AuthContext";
 
 SplashScreen.preventAutoHideAsync();
 
+function AppContent() {
+  const { loading, tokens, user } = useAuth();
+
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
+
+  return user && tokens?.refresh_token ? (
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+    </Stack>
+  ) : (
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="index" options={{ headerShown: false }} />
+      <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+    </Stack>
+  );
+}
+
+
 export default function RootLayout() {
-    // ! FONTS LOADING:
     const [fontsLoaded] = useFonts({
         "Cairo-Black": require("../../assets/fonts/Cairo-Black.ttf"),
         "Cairo-Bold": require("../../assets/fonts/Cairo-Bold.ttf"),
@@ -26,10 +49,6 @@ export default function RootLayout() {
         "Tajawal-Regular": require("../../assets/fonts/Tajawal-Regular.ttf"),
     });
 
-    // @ AUTH TEST
-    const { isLoggedIn } = useAuth();
-
-    // ! FONTS LOADING:
     useEffect(() => {
         if (fontsLoaded) SplashScreen.hideAsync();
     }, [fontsLoaded]);
@@ -37,38 +56,11 @@ export default function RootLayout() {
         return null;
     }
 
-    // @ AUTH TEST
-    if (isLoggedIn === null) {
-        return (
-            <View
-                style={{
-                    flex: 1,
-                    justifyContent: "center",
-                    alignItems: "center",
-                }}
-            >
-                <ActivityIndicator color={"#39498a"} size="large" />
-            </View>
-        );
-    }
-
     return (
-        <>
-            {isLoggedIn ? (
-                <Stack screenOptions={{ headerShown: false }}>
-                    <Stack.Screen
-                        name="(tabs)"
-                        options={{ headerShown: false }}
-                    />
-                </Stack>
-            ) : (
-                <Stack screenOptions={{ headerShown: false }}>
-                    <Stack.Screen
-                        name="(auth)"
-                        options={{ headerShown: false }}
-                    />
-                </Stack>
-            )}
-        </>
+      <>
+        <AuthProvider>
+          <AppContent />
+        </AuthProvider>
+      </>
     );
 }

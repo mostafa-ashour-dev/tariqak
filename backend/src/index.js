@@ -9,8 +9,19 @@ import messingBodyMiddleware from "./middlewares/missing-body.middleware";
 
 const app = express();
 
+const origins = [
+    "http://localhost:3000",
+    "http://localhost:8081",
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:8081",
+]
 // Middlewares
-app.use(cors());
+app.use(cors(
+    {
+        origin: origins,
+        credentials: true,
+    }
+));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
