@@ -23,6 +23,7 @@ type State = {
     },
     loading: boolean
 }
+
 export default function AuthProvider({ children }: any) {
     const [state, setState] = useState<State>({
         user: null,
