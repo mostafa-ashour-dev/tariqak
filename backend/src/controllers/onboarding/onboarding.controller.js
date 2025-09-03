@@ -67,8 +67,8 @@ const driverOnboarding = async (req, res) => {
             location: {
                 type: "Point",
                 coordinates: [
-                    area.location.coordinates.longitude,
-                    area.location.coordinates.latitude,
+                    area.location.longitude,
+                    area.location.latitude,
                 ],
             },
             name: area.name,

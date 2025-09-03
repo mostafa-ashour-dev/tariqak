@@ -80,7 +80,7 @@ const getWorkshop = async (req, res) => {
 const editWorkshop = async (req, res) => {
     const { user } = req;
     const { workshopSlug } = req.params;
-    const { title, description, locations, images, services, logo } =
+    const { title, description, images, services, logo } =
         req.body || {};
 
     if (!workshopSlug) {
@@ -111,14 +111,13 @@ const editWorkshop = async (req, res) => {
         throw new ResponseError(400, "Input Error", "Workshop not found");
     }
 
-    if (!title) {
+    if (title) {
         await findWorkshop.updateTitleSlug(title);
     }
 
     await Workshop.findByIdAndUpdate(findWorkshop._id, {
         title,
         description,
-        locations,
         images,
         services,
         logo,

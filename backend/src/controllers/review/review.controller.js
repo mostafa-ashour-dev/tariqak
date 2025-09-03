@@ -5,6 +5,7 @@ import Review from "../../models/schemas/review/review.model";
 import ResponseError from "../../classes/response-error.class";
 import returnMissingFields from "../../utils/missing-fields.util";
 import paginateResults from "../../utils/paginate-results.util";
+import GasStation from "../../models/schemas/gas-station/gas-station.model";
 
 const createReview = async (req, res) => {
     const { user } = req;
@@ -12,10 +13,14 @@ const createReview = async (req, res) => {
     const { referenceType, target, is_anonymous } = req.params || {};
 
     if (!referenceType || !target) {
-        throw new ResponseError(400, "Input Error", "Reference and reference are required");
+        throw new ResponseError(
+            400,
+            "Input Error",
+            "Reference and reference are required"
+        );
     }
 
-    if (referenceType !== "driver" && referenceType !== "workshop") {
+    if (referenceType !== "driver" && referenceType !== "workshop" && referenceType !== "gas-station") {
         throw new ResponseError(400, "Input Error", "Invalid reference type");
     }
 
@@ -24,7 +29,10 @@ const createReview = async (req, res) => {
     });
 
     if (missingFields.length > 0) {
-        throw new ResponseError(400, "Input Error", "Missing fields: " + missingFields.join(", ")
+        throw new ResponseError(
+            400,
+            "Input Error",
+            "Missing fields: " + missingFields.join(", ")
         );
     }
 
@@ -34,7 +42,7 @@ const createReview = async (req, res) => {
     }
 
     let referenceData = {};
-    let refrenceDoc
+    let refrenceDoc;
     if (referenceType === "driver") {
         const existingUser = await User.findOne({ username: target });
         if (!existingUser) {
@@ -45,28 +53,34 @@ const createReview = async (req, res) => {
         if (!refrenceDoc) {
             throw new ResponseError(400, "Input Error", "Driver not found");
         }
-        referenceData.type = "driver"
-        referenceData.target = refrenceDoc._id
-
+        referenceData.type = "driver";
+        referenceData.target = refrenceDoc._id;
     } else if (referenceType === "workshop") {
-        refrenceDoc = await Workshop.findOne({ title_slug: target});
+        refrenceDoc = await Workshop.findOne({ title_slug: target });
         if (!refrenceDoc) {
             throw new ResponseError(400, "Input Error", "Workshop not found");
         }
-        referenceData.type = "workshop"
-        referenceData.target = refrenceDoc._id
+        referenceData.type = "workshop";
+        referenceData.target = refrenceDoc._id;
+    } else if (referenceType === "gas-station") {
+        refrenceDoc = await GasStation.findOne({ title_slug: target });
+        if (!refrenceDoc) {
+            throw new ResponseError(400, "Input Error", "Gas station not found");
+        }
+        referenceData.type = "gas-station";
+        referenceData.target = refrenceDoc._id;
     }
 
     await Review.create({
         user: findUser._id,
         reference: {
             type: referenceData.type,
-            target: referenceData.target
+            target: referenceData.target,
         },
         rating,
         comment,
         image,
-        is_anonymous
+        is_anonymous,
     });
 
     if (refrenceDoc) {
@@ -79,16 +93,20 @@ const createReview = async (req, res) => {
         message: "Review created successfully",
         data: null,
     });
-}
+};
 
 const getTargetReviews = async (req, res) => {
     const { referenceType, target } = req.params || {};
 
     if (!referenceType || !target) {
-        throw new ResponseError(400, "Input Error", "Reference and reference are required");
+        throw new ResponseError(
+            400,
+            "Input Error",
+            "Reference and reference are required"
+        );
     }
 
-    if (referenceType !== "driver" && referenceType !== "workshop") {
+    if (referenceType !== "driver" && referenceType !== "workshop" && referenceType !== "gas-station") {
         throw new ResponseError(400, "Input Error", "Invalid reference type");
     }
 
@@ -109,13 +127,13 @@ const getTargetReviews = async (req, res) => {
             model: Review,
             query: {
                 "reference.type": "driver",
-                "reference.target": findDriver._id
+                "reference.target": findDriver._id,
             },
             populate: "user",
             select: "username full_name avatar role",
         });
     } else if (referenceType === "workshop") {
-        const findWorkshop = await Workshop.findOne({ title_slug: target});
+        const findWorkshop = await Workshop.findOne({ title_slug: target });
         if (!findWorkshop) {
             throw new ResponseError(400, "Input Error", "Workshop not found");
         }
@@ -124,7 +142,22 @@ const getTargetReviews = async (req, res) => {
             model: Review,
             query: {
                 "reference.type": "workshop",
-                "reference.target": findWorkshop._id
+                "reference.target": findWorkshop._id,
+            },
+            populate: "user",
+            select: "username full_name avatar role",
+        });
+    } else if (referenceType === "gas-station") {
+        const findGasStation = await GasStation.findOne({ title_slug: target });
+        if (!findGasStation) {
+            throw new ResponseError(400, "Input Error", "Gas station not found");
+        }
+
+        reviews = await paginateResults({
+            model: Review,
+            query: {
+                "reference.type": "gas-station",
+                "reference.target": findGasStation._id,
             },
             populate: "user",
             select: "username full_name avatar role",
@@ -135,12 +168,17 @@ const getTargetReviews = async (req, res) => {
         success: true,
         type: "success",
         message: "Reviews fetched successfully",
-        data: {...reviews, rating: reviews.results.length > 0 && reviews.results.reduce((acc, review) => acc + review.rating, 0) / reviews.results.length || 0},
+        data: {
+            ...reviews,
+            rating:
+                (reviews.results.length > 0 &&
+                    reviews.results.reduce(
+                        (acc, review) => acc + review.rating,
+                        0
+                    ) / reviews.results.length) ||
+                0,
+        },
     });
+};
 
-}
-
-export {
-    createReview,
-    getTargetReviews
-}
+export { createReview, getTargetReviews };
