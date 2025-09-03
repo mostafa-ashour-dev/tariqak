@@ -20,7 +20,11 @@ const createReview = async (req, res) => {
         );
     }
 
-    if (referenceType !== "driver" && referenceType !== "workshop" && referenceType !== "gas-station") {
+    if (
+        referenceType !== "driver" &&
+        referenceType !== "workshop" &&
+        referenceType !== "gas-station"
+    ) {
         throw new ResponseError(400, "Input Error", "Invalid reference type");
     }
 
@@ -65,7 +69,11 @@ const createReview = async (req, res) => {
     } else if (referenceType === "gas-station") {
         refrenceDoc = await GasStation.findOne({ title_slug: target });
         if (!refrenceDoc) {
-            throw new ResponseError(400, "Input Error", "Gas station not found");
+            throw new ResponseError(
+                400,
+                "Input Error",
+                "Gas station not found"
+            );
         }
         referenceData.type = "gas-station";
         referenceData.target = refrenceDoc._id;
@@ -106,7 +114,11 @@ const getTargetReviews = async (req, res) => {
         );
     }
 
-    if (referenceType !== "driver" && referenceType !== "workshop" && referenceType !== "gas-station") {
+    if (
+        referenceType !== "driver" &&
+        referenceType !== "workshop" &&
+        referenceType !== "gas-station"
+    ) {
         throw new ResponseError(400, "Input Error", "Invalid reference type");
     }
 
@@ -150,7 +162,11 @@ const getTargetReviews = async (req, res) => {
     } else if (referenceType === "gas-station") {
         const findGasStation = await GasStation.findOne({ title_slug: target });
         if (!findGasStation) {
-            throw new ResponseError(400, "Input Error", "Gas station not found");
+            throw new ResponseError(
+                400,
+                "Input Error",
+                "Gas station not found"
+            );
         }
 
         reviews = await paginateResults({

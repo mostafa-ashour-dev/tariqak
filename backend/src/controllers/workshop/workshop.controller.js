@@ -80,8 +80,7 @@ const getWorkshop = async (req, res) => {
 const editWorkshop = async (req, res) => {
     const { user } = req;
     const { workshopSlug } = req.params;
-    const { title, description, images, services, logo } =
-        req.body || {};
+    const { title, description, images, services, logo } = req.body || {};
 
     if (!workshopSlug) {
         throw new ResponseError(

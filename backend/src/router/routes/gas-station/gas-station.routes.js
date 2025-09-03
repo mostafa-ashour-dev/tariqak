@@ -6,7 +6,7 @@ import {
     createGasStation,
     editGasStation,
     getGasStation,
-    getNearbyStations
+    getNearbyStations,
 } from "../../../controllers/gas-station/gas-station.controller";
 
 const router = Router();
@@ -39,4 +39,3 @@ router.post(
 );
 
 export default router;
-

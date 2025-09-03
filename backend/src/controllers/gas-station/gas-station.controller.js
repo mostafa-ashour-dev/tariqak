@@ -14,7 +14,7 @@ const createGasStation = async (req, res) => {
         title,
         locations,
         services,
-        locations
+        locations,
     });
 
     if (missingFields.length > 0) {
@@ -48,7 +48,6 @@ const createGasStation = async (req, res) => {
         "-" +
         crypto.randomBytes(4).toString("hex");
 
-
     const newGasStation = await GasStation.create({
         title,
         title_slug,
@@ -61,15 +60,15 @@ const createGasStation = async (req, res) => {
                     currentLocation.location.latitude,
                 ],
             },
-            address: currentLocation.address
+            address: currentLocation.address,
         })),
         images,
         services,
         logo,
         reference: {
             type: "admin",
-            target: findUser._id
-        }
+            target: findUser._id,
+        },
     });
 
     await newGasStation.updateTitleSlug();
@@ -78,18 +77,24 @@ const createGasStation = async (req, res) => {
         success: true,
         type: "success",
         message: "Gas station created successfully",
-        data: null
-    })
-}
+        data: null,
+    });
+};
 
 const getGasStation = async (req, res) => {
     const { gasStationSlug } = req.params;
 
     if (!gasStationSlug) {
-        throw new ResponseError(400, "Input Error", "Gas station slug is required");
+        throw new ResponseError(
+            400,
+            "Input Error",
+            "Gas station slug is required"
+        );
     }
 
-    const findGasStation = await GasStation.findOne({ title_slug: gasStationSlug }).select("-reference");
+    const findGasStation = await GasStation.findOne({
+        title_slug: gasStationSlug,
+    }).select("-reference");
     if (!findGasStation) {
         throw new ResponseError(400, "Input Error", "Gas station not found");
     }
@@ -98,14 +103,15 @@ const getGasStation = async (req, res) => {
         success: true,
         type: "success",
         message: "Gas station fetched successfully",
-        data: findGasStation
-    })
-
-
-}
+        data: findGasStation,
+    });
+};
 
 const getNearbyStations = async (req, res) => {
-    const { location: { latitude, longitude }, radius = 10 } = req.body;
+    const {
+        location: { latitude, longitude },
+        radius = 10,
+    } = req.body;
     const { page = 1, limit = 10 } = req.query;
     const missingFields = returnMissingFields({ latitude, longitude });
 
@@ -131,23 +137,20 @@ const getNearbyStations = async (req, res) => {
             },
         },
         page: page,
-        limit: limit
+        limit: limit,
     });
 
     res.status(200).json({
         success: true,
         type: "success",
         message: "Gas stations found successfully",
-        data: paginatedData
+        data: paginatedData,
     });
-
-
-}
+};
 
 const editGasStation = async (req, res) => {
     const { user } = req;
-    const { title, description, images, services, logo } =
-        req.body || {};
+    const { title, description, images, services, logo } = req.body || {};
     const { gasStationSlug } = req.params;
 
     if (!gasStationSlug) {
@@ -174,8 +177,8 @@ const editGasStation = async (req, res) => {
         title_slug: gasStationSlug,
         reference: {
             type: "admin",
-            target: findUser._id
-        }
+            target: findUser._id,
+        },
     });
 
     if (!findGasStation) {
@@ -186,21 +189,24 @@ const editGasStation = async (req, res) => {
         await findGasStation.updateTitleSlug(title);
     }
 
-    await GasStation.updateOne({ _id: findGasStation._id }, {
-        title,
-        description,
-        images,
-        services,
-        logo
-    });
+    await GasStation.updateOne(
+        { _id: findGasStation._id },
+        {
+            title,
+            description,
+            images,
+            services,
+            logo,
+        }
+    );
 
     res.status(200).json({
         success: true,
         type: "success",
         message: "Gas station updated successfully",
-        data: null
-    })
-}
+        data: null,
+    });
+};
 
 const addGasStationLocation = async (req, res) => {
     const { user } = req;
@@ -217,7 +223,6 @@ const addGasStationLocation = async (req, res) => {
             "Gas station slug is required"
         );
     }
-
 
     const missingFields = returnMissingFields({ latitude, longitude });
 
@@ -245,34 +250,41 @@ const addGasStationLocation = async (req, res) => {
         title_slug: gasStationSlug,
         reference: {
             type: "admin",
-            target: findUser._id
-        }
+            target: findUser._id,
+        },
     });
 
     if (!findGasStation) {
         throw new ResponseError(400, "Input Error", "Gas station not found");
     }
 
-    await GasStation.updateOne({ _id: findGasStation._id }, {
-        $push: {
-            locations: {
-                location: {
-                    type: "Point",
-                    coordinates: [longitude, latitude],
+    await GasStation.updateOne(
+        { _id: findGasStation._id },
+        {
+            $push: {
+                locations: {
+                    location: {
+                        type: "Point",
+                        coordinates: [longitude, latitude],
+                    },
+                    address,
                 },
-                address
-            }
+            },
         }
-    });
+    );
 
     res.status(200).json({
         success: true,
         type: "success",
         message: "Gas station location added successfully",
-        data: null
-    })
+        data: null,
+    });
+};
 
-
-}
-
-export { createGasStation, getNearbyStations, editGasStation, addGasStationLocation, getGasStation };
+export {
+    createGasStation,
+    getNearbyStations,
+    editGasStation,
+    addGasStationLocation,
+    getGasStation,
+};

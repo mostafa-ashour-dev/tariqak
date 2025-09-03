@@ -1,4 +1,10 @@
-import { TextInputProps, TextProps, TouchableOpacityProps } from "react-native";
+import {
+    PressableProps,
+    TextInputProps,
+    TextProps,
+    TouchableOpacityProps,
+    ViewProps,
+} from "react-native";
 import styled from "styled-components/native";
 import { lightTheme, theme } from "styles/styles";
 
@@ -26,24 +32,25 @@ export const Caption = styled.Text<CaptionProps>`
     font-size: ${({ fontSize }: CaptionProps) =>
         fontSize || theme.fontSizes["md"]};
     text-align: center;
-    line-height: ${({ lineHeight}: CaptionProps) => lineHeight || "16px"};
+    line-height: ${({ lineHeight }: CaptionProps) => lineHeight || "16px"};
 `;
 
 type MainButtonProps = TouchableOpacityProps & {
     outlined?: boolean;
+    width: string;
 };
 export const MainButton = styled.TouchableOpacity<MainButtonProps>`
-  width: 80%;
-  background-color: ${({ outlined }: MainButtonProps) =>
-    outlined ? "white" : lightTheme.colors.primary};
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: ${({ outlined }: MainButtonProps) =>
-    outlined ? `${theme.padding.md}` : `${theme.padding.md + 2}`}px;
-  border-radius: ${theme.radius.full}px;
-  border: ${({ outlined }: MainButtonProps) =>
-    outlined ? `2px solid ${lightTheme.colors.primary}` : "none"};
+    width: ${({ width }: MainButtonProps) => width || "85%"};
+    background-color: ${({ outlined }: MainButtonProps) =>
+        outlined ? "white" : lightTheme.colors.primary};
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: ${({ outlined }: MainButtonProps) =>
+        outlined ? `${theme.padding.md}` : `${theme.padding.md + 2}`}px;
+    border-radius: ${theme.radius.full}px;
+    border: ${({ outlined }: MainButtonProps) =>
+        outlined ? `2px solid ${lightTheme.colors.primary}` : "none"};
 `;
 
 type MainButtonTextProps = TextProps & {
@@ -57,20 +64,44 @@ export const MainButtonText = styled.Text<MainButtonTextProps>`
 `;
 
 type InputProps = TextInputProps & {
-    fontSize?: string; 
-}
+    fontSize?: string;
+    textAlgin?: string;
+};
 export const MainInput = styled.TextInput<InputProps>`
-    background-color: "white";
+    flex: 1;
+    background-color: white;
     border-radius: ${theme.radius.sm}px;
     padding: 10px;
-    margin: 5px;
     border: 1px solid ${lightTheme.colors.border.gray};
     width: 100%;
-    font-size: ${({ fontSize }: InputProps) => fontSize || theme.fontSizes["md"]};
+    font-size: ${({ fontSize }: InputProps) =>
+        fontSize || theme.fontSizes["md"]};
     color: ${lightTheme.colors.text.dark};
     font-family: ${theme.fontFamilies.secondary.regular};
+    text-align: ${({ textAlgin }: InputProps) => textAlgin || "right"};
 `;
 
+type IconContainerProps = ViewProps & {};
+export const IconContainer = styled.View<IconContainerProps>`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 7px;
+    background-color: white;
+    border-radius: ${theme.radius.sm}px;
+    border: 1px solid ${lightTheme.colors.border.gray};
+`;
+
+type IconButtonProps = PressableProps & {};
+export const IconButton = styled.Pressable<IconButtonProps>`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 7px;
+    background-color: white;
+    border-radius: ${theme.radius.sm}px;
+    border: 1px solid ${lightTheme.colors.border.gray};
+`;
 
 type MainLinkTextProps = TextProps & {
     fontSize?: string;
@@ -82,10 +113,11 @@ export const MainLinkText = styled.Text<MainLinkTextProps>`
     font-family: ${theme.fontFamilies.secondary.regular};
 `;
 
-
 type SecondaryTextProps = TextProps & {
     fontSize?: string;
 };
 export const SecondaryText = styled.Text<SecondaryTextProps>`
-    
-`
+    font-size: ${({ fontSize }: SecondaryTextProps) =>
+        fontSize || theme.fontSizes["md"]};
+    font-family: ${theme.fontFamilies.secondary.regular};
+`;

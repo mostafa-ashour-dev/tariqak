@@ -1,93 +1,198 @@
-import { View, Alert } from "react-native";
-import React, {useState } from "react";
 import {
-  MainButton,
-  MainButtonText,
-  MainInput,
-  MainLinkText,
-  MainTitle,
-  SecondaryText,
+    View,
+    Alert,
+    StyleSheet,
+    TouchableWithoutFeedback,
+    Keyboard,
+    KeyboardAvoidingView,
+    Platform,
+    Pressable,
+} from "react-native";
+import React, { useState } from "react";
+import {
+    IconButton,
+    IconContainer,
+    MainButton,
+    MainButtonText,
+    MainInput,
+    MainLinkText,
+    MainTitle,
+    SecondaryText,
 } from "components/styledComponents";
 import { useAuth } from "context/auth/AuthContext";
 import { useRouter } from "expo-router";
 import { lightTheme, theme } from "styles/styles";
+import { Eye, EyeClosed, EyeOff, Lock, User } from "lucide-react-native";
+import { TouchableOpacity } from "react-native";
+import Back from "components/back";
 
 type LoginBody = {
-  credential: string;
-  password: string;
+    credential: string;
+    password: string;
 };
 
 const Login = () => {
-  const { onLogin } = useAuth();
-  const [loginBody, setLoginBody] = useState<LoginBody>({
-    credential: "",
-    password: "",
-  });
+    // @ Toggle Showing password
+    const [showPassword, setShowPassword] = useState<boolean>(false);
 
-  const router = useRouter();
+    const { onLogin } = useAuth();
+    const [loginBody, setLoginBody] = useState<LoginBody>({
+        credential: "",
+        password: "",
+    });
 
-  const handleLogin = async () => {
-    try {
+    const router = useRouter();
 
-      if (!loginBody.credential || !loginBody.password) {
-        Alert.alert("Error", "Please fill in all fields.");
-        return;
-      }
-      await onLogin({
-        ...loginBody
-      });
+    const handleLogin = async () => {
+        try {
+            if (!loginBody.credential || !loginBody.password) {
+                Alert.alert("من فضلك أكمل جميع الخانات للمتباعه");
+                return;
+            }
+            await onLogin({
+                ...loginBody,
+            });
 
-      router.push("/(tabs)/index");
-    } catch (error: Error | any) {
-      console.log(error);
-      Alert.alert("Error", error.message);
-    }
-  };
+            router.push("/(tabs)/index");
+        } catch (error: Error | any) {
+            console.log(error);
+            Alert.alert("Error", error.message);
+        }
+    };
 
-  return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: lightTheme.colors.background.light }}>
-      <MainTitle fontSize="25px">تسجيل دخول</MainTitle>
-      <View style={{ marginTop: 10, width: "80%", alignItems: "center" }}>
-        <MainInput
-          onChangeText={(text: string) =>
-            setLoginBody({ ...loginBody, credential: text })
-          }
-          placeholder="رقم الهاتف أو أسم المستخدم"
-          placeholderTextColor={lightTheme.colors.text.light}
-          fontSize="15px"
-        />
-        <MainInput
-          onChangeText={(text: string) =>
-            setLoginBody({ ...loginBody, password: text })
-          }
-          placeholder="كلمة المرور"
-          secureTextEntry
-          placeholderTextColor={lightTheme.colors.text.light}
-          fontSize="15px"
-        />
-        <View style={{ width: "100%", alignItems: "flex-end" }}>
-          <MainLinkText fontSize="15px" style={{ marginTop: 5 }}>
-            نسيت كلمة المرور؟
-          </MainLinkText>
-        </View>
+    return (
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+            <KeyboardAvoidingView
+                style={{ flex: 1 }}
+                behavior={Platform.OS === "ios" ? "padding" : "height"}
+            >
+                <Back value="رجوع" path="/" />
+                <View
+                    style={{
+                        flex: 1,
+                        justifyContent: "center",
+                        alignItems: "center",
+                        flexDirection: "column",
+                        backgroundColor: lightTheme.colors.background.light,
+                    }}
+                >
+                    <MainTitle fontSize="35px">تسجيل دخول</MainTitle>
+                    <View
+                        style={{
+                            marginTop: 20,
+                            alignItems: "center",
+                            width: "100%",
+                        }}
+                    >
+                        <View style={styles.inputContainer}>
+                            <IconContainer style={{ marginLeft: 3 }}>
+                                <User color={lightTheme.colors.text.light} />
+                            </IconContainer>
+                            <MainInput
+                                onChangeText={(text: string) =>
+                                    setLoginBody({
+                                        ...loginBody,
+                                        credential: text,
+                                    })
+                                }
+                                placeholder="رقم الهاتف أو أسم المستخدم"
+                                placeholderTextColor={
+                                    lightTheme.colors.text.light
+                                }
+                                fontSize="15px"
+                                cursorColor={lightTheme.colors.primary}
+                            />
+                        </View>
+                        <View style={styles.inputContainer}>
+                            <IconContainer style={{ marginLeft: 3 }}>
+                                <Lock color={lightTheme.colors.text.light} />
+                            </IconContainer>
+                            <MainInput
+                                onChangeText={(text: string) =>
+                                    setLoginBody({
+                                        ...loginBody,
+                                        password: text,
+                                    })
+                                }
+                                placeholder="كلمة المرور"
+                                secureTextEntry={!showPassword}
+                                placeholderTextColor={
+                                    lightTheme.colors.text.light
+                                }
+                                fontSize="15px"
+                                cursorColor={lightTheme.colors.primary}
+                            />
+                            <Pressable
+                                onPress={() => setShowPassword(!showPassword)}
+                                style={{
+                                    position: "absolute",
+                                    left: 10,
+                                    height: "100%",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                }}
+                            >
+                                {showPassword ? (
+                                    <EyeClosed
+                                        color={lightTheme.colors.primary}
+                                    />
+                                ) : (
+                                    <Eye color={lightTheme.colors.primary} />
+                                )}
+                            </Pressable>
+                        </View>
+                        <TouchableOpacity
+                            style={{
+                                alignItems: "center",
+                                marginTop: theme.margin.lg,
+                                marginLeft: "auto",
+                                marginRight: 40,
+                            }}
+                        >
+                            <MainLinkText fontSize="16px">
+                                نسيت كلمة المرور؟
+                            </MainLinkText>
+                        </TouchableOpacity>
 
-        <MainButton
-          onPress={handleLogin}
-          style={{ marginTop: 15, width: "100%" }}
-        >
-          <MainButtonText>تسجيل دخول</MainButtonText>
-        </MainButton>
-        <View style={{marginTop: theme.margin.md, gap: theme.spacing.xs}} >
-          <SecondaryText>
-            ليس لديك حساب؟
-          </SecondaryText>
-          <MainLinkText>
-            إنشاء حساب جديد
-          </MainLinkText>
-        </View>
-      </View>
-    </View>
-  );
+                        <MainButton
+                            onPress={handleLogin}
+                            style={{ marginTop: 24 }}
+                            width="80%"
+                        >
+                            <MainButtonText>تسجيل دخول</MainButtonText>
+                        </MainButton>
+                        <TouchableOpacity
+                            onPress={() => router.push("/register")}
+                            style={{
+                                marginTop: theme.margin.lg,
+                                gap: theme.spacing.xs,
+                                flexDirection: "row",
+                                alignItems: "baseline",
+                                justifyContent: "center",
+                            }}
+                        >
+                            <MainLinkText fontSize="16px">
+                                إنشاء حساب جديد
+                            </MainLinkText>
+                            <SecondaryText fontSize="16px">
+                                ليس لديك حساب؟
+                            </SecondaryText>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </KeyboardAvoidingView>
+        </TouchableWithoutFeedback>
+    );
 };
+
+const styles = StyleSheet.create({
+    inputContainer: {
+        flexDirection: "row-reverse",
+        alignItems: "center",
+        width: "85%",
+        marginTop: 10,
+    },
+});
 
 export default Login;
