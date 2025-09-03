@@ -4,7 +4,7 @@ import React from "react";
 const Verify = () => {
     return (
         <View>
-            <Text>verify</Text>
+            <Text>Verify Screen is Here</Text>
         </View>
     );
 };

@@ -2,8 +2,16 @@ import { createContext, useContext, useState, useMemo, useEffect } from "react";
 import * as SecureStore from "expo-secure-store";
 import { onLogin } from "./actions/onLogin";
 import { onRegister } from "./actions/onRegister";
+import { onVerifyCode } from "./actions/onVerifyCode";
+import { onRequestVerificationCode } from "./actions/onRequestVerificationCode";
 
-type nextStep = "LOGIN" | "VERIFY" | "HOME" | "DRIVER_ONBOARDING" | null;
+type nextStep =
+    | "LOGIN"
+    | "VERIFY"
+    | "HOME"
+    | "DRIVER_ONBOARDING"
+    | "REGISTER"
+    | null;
 
 type State = {
     is_verified: boolean | null;
@@ -19,6 +27,8 @@ type State = {
 type ContextType = State & {
     onRegister: any;
     onLogin: any;
+    onRequestVerificationCode: any;
+    onVerifyCode: any;
 };
 
 const AuthContext = createContext({} as ContextType);
@@ -33,7 +43,7 @@ export default function AuthProvider({ children }: any) {
         },
         is_verified: null,
         loading: true,
-        nextStep: "LOGIN",
+        nextStep: null,
     });
 
     useEffect(() => {
@@ -55,7 +65,7 @@ export default function AuthProvider({ children }: any) {
                     tokens: { access_token: null, refresh_token: null },
                     is_verified: false,
                     loading: false,
-                    nextStep: "LOGIN",
+                    nextStep: null,
                 });
             }
         };
@@ -73,7 +83,18 @@ export default function AuthProvider({ children }: any) {
                 email: string;
                 password: string;
                 role: string;
-            }) => onRegister({ credentials, setState }),
+            }) => {
+                onRegister({ credentials, setState });
+            },
+            onRequestVerificationCode: ({
+                type,
+                credential,
+            }: {
+                type: "email" | "phone_number";
+                credential: string;
+            }) => onRequestVerificationCode({ type, credential }),
+            onVerifyCode: ({ code }: { code: string }) =>
+                onVerifyCode({ code, setState }),
         }),
         [state]
     );

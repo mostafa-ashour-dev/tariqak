@@ -1,4 +1,4 @@
-import { axiosInstance } from "app/axios/instance";
+import axiosInstance from "app/axios/instance";
 
 type Props = {
     type: "email" | "phone_number";

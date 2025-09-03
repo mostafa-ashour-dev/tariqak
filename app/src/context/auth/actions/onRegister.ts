@@ -1,4 +1,4 @@
-import { axiosInstance } from "app/axios/instance";
+import axiosInstance from "app/axios/instance";
 import * as SecureStore from "expo-secure-store";
 
 type Props = {
@@ -14,14 +14,17 @@ type Props = {
 
 export const onRegister = async ({ credentials, setState }: Props) => {
     try {
-        const response = await axiosInstance.post("/auth/login", credentials);
+        const response = await axiosInstance.post(
+            "/auth/register",
+            credentials
+        );
         if (response.status === 200) {
             setState((prev: any) => ({
                 ...prev,
                 user: null,
                 is_verified: false,
                 nextStep: "VERIFY",
-                token: { refresh_token: null, access_token: null },
+                tokens: { refresh_token: null, access_token: null },
             }));
 
             const authState = {

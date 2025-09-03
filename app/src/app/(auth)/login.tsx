@@ -52,8 +52,6 @@ const Login = () => {
             await onLogin({
                 ...loginBody,
             });
-
-            router.push("/(tabs)/index");
         } catch (error: Error | any) {
             console.log(error);
             Alert.alert("Error", error.message);
@@ -85,9 +83,6 @@ const Login = () => {
                         }}
                     >
                         <View style={styles.inputContainer}>
-                            <IconContainer style={{ marginLeft: 3 }}>
-                                <User color={lightTheme.colors.text.light} />
-                            </IconContainer>
                             <MainInput
                                 onChangeText={(text: string) =>
                                     setLoginBody({
@@ -104,9 +99,6 @@ const Login = () => {
                             />
                         </View>
                         <View style={styles.inputContainer}>
-                            <IconContainer style={{ marginLeft: 3 }}>
-                                <Lock color={lightTheme.colors.text.light} />
-                            </IconContainer>
                             <MainInput
                                 onChangeText={(text: string) =>
                                     setLoginBody({
@@ -158,7 +150,7 @@ const Login = () => {
                         <MainButton
                             onPress={handleLogin}
                             style={{ marginTop: 24 }}
-                            width="80%"
+                            width="70%"
                         >
                             <MainButtonText>تسجيل دخول</MainButtonText>
                         </MainButton>
@@ -190,7 +182,7 @@ const styles = StyleSheet.create({
     inputContainer: {
         flexDirection: "row-reverse",
         alignItems: "center",
-        width: "85%",
+        width: "75%",
         marginTop: 10,
     },
 });

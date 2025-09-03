@@ -23,51 +23,25 @@ function AppContent() {
         );
     }
 
-    switch (nextStep) {
-        case "VERIFY":
-            return (
-                <Stack screenOptions={{ headerShown: false }}>
-                    <Stack.Screen
-                        name="(auth)/verify"
-                        options={{ headerShown: false }}
-                    />
-                </Stack>
-            );
-        case "LOGIN":
-            return (
-                <Stack screenOptions={{ headerShown: false }}>
-                    <Stack.Screen
-                        name="(auth)/login"
-                        options={{ headerShown: false }}
-                    />
-                </Stack>
-            );
-        case "DRIVER_ONBOARDING":
-            return (
-                <Stack screenOptions={{ headerShown: false }}>
-                    <Stack.Screen
-                        name="(auth)/driver"
-                        options={{ headerShown: false }}
-                    />
-                </Stack>
-            );
-        case "HOME":
+    const authSteps = ["DRIVER_ONBOARDING", "VERIFY", "LOGIN", "REGISTER"];
+    if (authSteps.includes(nextStep as string)) {
+        return (
+            <Stack screenOptions={{ headerShown: false }}>
+                <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+            </Stack>
+        );
+    } else if (nextStep === "HOME") {
+        return (
             <Stack screenOptions={{ headerShown: false }}>
                 <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            </Stack>;
-        default:
-            return (
-                <Stack screenOptions={{ headerShown: false }}>
-                    <Stack.Screen
-                        name="index"
-                        options={{ headerShown: false }}
-                    />
-                    <Stack.Screen
-                        name="(auth)"
-                        options={{ headerShown: false }}
-                    />
-                </Stack>
-            );
+            </Stack>
+        );
+    } else {
+        return (
+            <Stack screenOptions={{ headerShown: false }}>
+                <Stack.Screen name="index" options={{ headerShown: false }} />
+            </Stack>
+        );
     }
 }
 

@@ -1,4 +1,4 @@
-import { axiosInstance } from "app/axios/instance";
+import axiosInstance from "app/axios/instance";
 import * as SecureStore from "expo-secure-store";
 
 type Props = {
