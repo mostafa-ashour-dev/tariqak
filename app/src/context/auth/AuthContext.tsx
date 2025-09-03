@@ -2,6 +2,9 @@ import { createContext, useContext, useState, useMemo, useEffect } from "react";
 import * as SecureStore from "expo-secure-store";
 import { onLogin } from "./actions/onLogin";
 import { onRegister } from "./actions/onRegister";
+
+type nextStep = "LOGIN" | "VERIFY" | "HOME" | "DRIVER_ONBOARDING" | null;
+
 type State = {
     is_verified: boolean | null;
     user: null | object;
@@ -10,7 +13,7 @@ type State = {
         refresh_token: null | string;
     };
     loading: boolean;
-    nextStep: string;
+    nextStep: nextStep;
 };
 
 type ContextType = State & {
@@ -30,7 +33,7 @@ export default function AuthProvider({ children }: any) {
         },
         is_verified: null,
         loading: true,
-        nextStep: "login",
+        nextStep: "LOGIN",
     });
 
     useEffect(() => {
@@ -38,12 +41,13 @@ export default function AuthProvider({ children }: any) {
             const authState = await SecureStore.getItemAsync("authState");
 
             if (authState) {
+                const parsed = JSON.parse(authState);
                 setState({
-                    user: JSON.parse(authState).user,
-                    tokens: JSON.parse(authState).tokens,
-                    is_verified: JSON.parse(authState).is_verified,
+                    user: parsed.user,
+                    tokens: parsed.tokens,
+                    is_verified: parsed.is_verified,
                     loading: false,
-                    nextStep: "login",
+                    nextStep: parsed.nextStep || "LOGIN",
                 });
             } else {
                 setState({
@@ -51,7 +55,7 @@ export default function AuthProvider({ children }: any) {
                     tokens: { access_token: null, refresh_token: null },
                     is_verified: false,
                     loading: false,
-                    nextStep: "login",
+                    nextStep: "LOGIN",
                 });
             }
         };

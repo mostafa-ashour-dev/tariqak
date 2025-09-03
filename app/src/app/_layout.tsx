@@ -7,28 +7,69 @@ import AuthProvider, { useAuth } from "context/auth/AuthContext";
 SplashScreen.preventAutoHideAsync();
 
 function AppContent() {
-  const { loading, tokens, user } = useAuth();
+    const { loading, nextStep } = useAuth();
 
-  if (loading) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
-  }
+    if (loading) {
+        return (
+            <View
+                style={{
+                    flex: 1,
+                    justifyContent: "center",
+                    alignItems: "center",
+                }}
+            >
+                <ActivityIndicator size="large" />
+            </View>
+        );
+    }
 
-  return user && tokens?.refresh_token ? (
-    <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-    </Stack>
-  ) : (
-    <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="index" options={{ headerShown: false }} />
-      <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-    </Stack>
-  );
+    switch (nextStep) {
+        case "VERIFY":
+            return (
+                <Stack screenOptions={{ headerShown: false }}>
+                    <Stack.Screen
+                        name="(auth)/verify"
+                        options={{ headerShown: false }}
+                    />
+                </Stack>
+            );
+        case "LOGIN":
+            return (
+                <Stack screenOptions={{ headerShown: false }}>
+                    <Stack.Screen
+                        name="(auth)/login"
+                        options={{ headerShown: false }}
+                    />
+                </Stack>
+            );
+        case "DRIVER_ONBOARDING":
+            return (
+                <Stack screenOptions={{ headerShown: false }}>
+                    <Stack.Screen
+                        name="(auth)/driver"
+                        options={{ headerShown: false }}
+                    />
+                </Stack>
+            );
+        case "HOME":
+            <Stack screenOptions={{ headerShown: false }}>
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            </Stack>;
+        default:
+            return (
+                <Stack screenOptions={{ headerShown: false }}>
+                    <Stack.Screen
+                        name="index"
+                        options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                        name="(auth)"
+                        options={{ headerShown: false }}
+                    />
+                </Stack>
+            );
+    }
 }
-
 
 export default function RootLayout() {
     const [fontsLoaded] = useFonts({
@@ -57,10 +98,10 @@ export default function RootLayout() {
     }
 
     return (
-      <>
-        <AuthProvider>
-          <AppContent />
-        </AuthProvider>
-      </>
+        <>
+            <AuthProvider>
+                <AppContent />
+            </AuthProvider>
+        </>
     );
 }

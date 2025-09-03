@@ -45,13 +45,13 @@ type LoginBody = {
 };
 
 const Register = () => {
-    const { onRegister } = useAuth();
-
     // @ Toggle User Role
     const [role, setRole] = useState<"user" | "driver">("user");
 
     // @ Toggle Showing password
     const [showPassword, setShowPassword] = useState<boolean>(false);
+
+    const { onRegister } = useAuth();
 
     const [loginBody, setLoginBody] = useState<LoginBody>({
         full_name: "",

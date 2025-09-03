@@ -15,13 +15,26 @@ type Props = {
 export const onRegister = async ({ credentials, setState }: Props) => {
     try {
         const response = await axiosInstance.post("/auth/login", credentials);
-
-        const { data } = response;
         if (response.status === 200) {
             setState((prev: any) => ({
                 ...prev,
+                user: null,
                 is_verified: false,
+                nextStep: "VERIFY",
+                token: { refresh_token: null, access_token: null },
             }));
+
+            const authState = {
+                tokens: { refresh_token: null, access_token: null },
+                user: null,
+                is_verified: false,
+                nextStep: "VERIFY",
+            };
+
+            await SecureStore.setItemAsync(
+                "authState",
+                JSON.stringify(authState)
+            );
         }
     } catch (error: Error | any) {
         throw new Error(error.message as string);
