@@ -4,8 +4,9 @@ import { onLogin } from "./actions/onLogin";
 import { onRegister } from "./actions/onRegister";
 import { onVerifyCode } from "./actions/onVerifyCode";
 import { onRequestVerificationCode } from "./actions/onRequestVerificationCode";
+import { onLogout } from "./actions/onLogout";
 
-type nextStep = "VERIFY" | "HOME" | "DRIVER_ONBOARDING" | null;
+type nextStep = "VERIFY" | "HOME" | "DRIVER_ONBOARDING" | "WELCOME" | null;
 
 type State = {
     is_verified: boolean | null;
@@ -28,6 +29,7 @@ type ContextType = State & {
     onLogin: any;
     onRequestVerificationCode: any;
     onVerifyCode: any;
+    onLogout: any;
 };
 
 const AuthContext = createContext({} as ContextType);
@@ -56,7 +58,7 @@ export default function AuthProvider({ children }: any) {
                     tokens: parsed.tokens,
                     is_verified: parsed.is_verified,
                     loading: false,
-                    nextStep: parsed.nextStep || null,
+                    nextStep: parsed.nextStep,
                 });
             } else {
                 setState({
@@ -94,6 +96,7 @@ export default function AuthProvider({ children }: any) {
             }) => onRequestVerificationCode({ type, credential, setState }),
             onVerifyCode: ({ code }: { code: string }) =>
                 onVerifyCode({ code, setState }),
+            onLogout: () => onLogout({setState})
         }),
         [state]
     );

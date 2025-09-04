@@ -50,7 +50,7 @@ export const MainButton = styled.TouchableOpacity<MainButtonProps>`
     justify-content: center;
     align-items: center;
     padding: ${({ outlined }: MainButtonProps) =>
-        outlined ? `${theme.padding.md}` : `${theme.padding.md + 2}`}px;
+        outlined ? `${theme.padding.md + 2}` : `${theme.padding.md + 4}`}px;
     border-radius: ${theme.radius.full}px;
     border: ${({ outlined }: MainButtonProps) =>
         outlined ? `2px solid ${lightTheme.colors.primary}` : "none"};

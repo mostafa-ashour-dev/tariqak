@@ -12,26 +12,25 @@ export default function TabsLayout() {
         );
         NavigationBar.setButtonStyleAsync("dark");
     }, []);
+    console.log("tabs mounted");
     return (
-        <SafeAreaView
-            edges={["bottom", "top"]}
-            style={{
-                flex: 1,
-                backgroundColor: lightTheme.colors.background.light,
-            }}
-        >
-            <StatusBar barStyle={"dark-content"} backgroundColor="#fff" />
-            <Tabs
-                initialRouteName="index"
-                screenOptions={{ headerShown: false }}
-            >
-                <Tabs.Screen name="index" options={{ title: "Homepage" }} />
-                <Tabs.Screen
-                    name="workshops"
-                    options={{ title: "Workshops" }}
-                />
-                <Tabs.Screen name="profile" options={{ title: "Profile" }} />
-            </Tabs>
-        </SafeAreaView>
+      <SafeAreaView
+        edges={["bottom", "top"]}
+        style={{
+          flex: 1,
+          backgroundColor: lightTheme.colors.background.nav,
+        }}
+      >
+        <StatusBar
+          barStyle={"dark-content"}
+          backgroundColor="transparent"
+          hidden={false}
+        />
+        <Tabs initialRouteName="index" screenOptions={{ headerShown: false }}>
+          <Tabs.Screen name="index" options={{ title: "Homepage" }} />
+          <Tabs.Screen name="workshops" options={{ title: "Workshops" }} />
+          <Tabs.Screen name="profile" options={{ title: "Profile" }} />
+        </Tabs>
+      </SafeAreaView>
     );
 }

@@ -12,17 +12,16 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
     async (config: any) => {
-        const authState = JSON.parse(
-            (await SecureStore.getItemAsync("authState")) as string
-        );
+        const authState = await SecureStore.getItemAsync("authState");
+        const parsed = JSON.parse(authState as string);
         console.log("🚀 ~ authState:", authState);
-        if (authState?.tokens?.access_token) {
-            config.headers.Authorization = `Bearer ${authState?.tokens.access_token}`;
+        if (parsed?.tokens?.access_token) {
+            config.headers.Authorization = `Bearer ${parsed?.tokens?.access_token}`;
         }
         return config;
     },
     (error: any) => {
-        return Promise.reject(error);
+        return Promise.reject(`Error from interceptor: ${error}`);
     }
 );
 
