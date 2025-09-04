@@ -2,20 +2,32 @@ import { createContext, useContext, useState, useMemo, useEffect } from "react";
 import * as SecureStore from "expo-secure-store";
 import { onLogin } from "./actions/onLogin";
 import { onRegister } from "./actions/onRegister";
+import { onVerifyCode } from "./actions/onVerifyCode";
+import { onRequestVerificationCode } from "./actions/onRequestVerificationCode";
+
+type nextStep = "VERIFY" | "HOME" | "DRIVER_ONBOARDING" | null;
+
 type State = {
     is_verified: boolean | null;
-    user: null | object;
+    user: null | {
+        full_name: string;
+        email: string;
+        phone_number: string;
+        role: string;
+    };
     tokens: {
         access_token: null | string;
         refresh_token: null | string;
     };
     loading: boolean;
-    nextStep: string;
+    nextStep: nextStep;
 };
 
 type ContextType = State & {
     onRegister: any;
     onLogin: any;
+    onRequestVerificationCode: any;
+    onVerifyCode: any;
 };
 
 const AuthContext = createContext({} as ContextType);
@@ -30,7 +42,7 @@ export default function AuthProvider({ children }: any) {
         },
         is_verified: null,
         loading: true,
-        nextStep: "login",
+        nextStep: null,
     });
 
     useEffect(() => {
@@ -38,12 +50,13 @@ export default function AuthProvider({ children }: any) {
             const authState = await SecureStore.getItemAsync("authState");
 
             if (authState) {
+                const parsed = JSON.parse(authState);
                 setState({
-                    user: JSON.parse(authState).user,
-                    tokens: JSON.parse(authState).tokens,
-                    is_verified: JSON.parse(authState).is_verified,
+                    user: parsed.user,
+                    tokens: parsed.tokens,
+                    is_verified: parsed.is_verified,
                     loading: false,
-                    nextStep: "login",
+                    nextStep: parsed.nextStep || null,
                 });
             } else {
                 setState({
@@ -51,7 +64,7 @@ export default function AuthProvider({ children }: any) {
                     tokens: { access_token: null, refresh_token: null },
                     is_verified: false,
                     loading: false,
-                    nextStep: "login",
+                    nextStep: null,
                 });
             }
         };
@@ -69,7 +82,18 @@ export default function AuthProvider({ children }: any) {
                 email: string;
                 password: string;
                 role: string;
-            }) => onRegister({ credentials, setState }),
+            }) => {
+                onRegister({ credentials, setState });
+            },
+            onRequestVerificationCode: ({
+                type,
+                credential,
+            }: {
+                type: "email" | "phone_number";
+                credential: string;
+            }) => onRequestVerificationCode({ type, credential, setState }),
+            onVerifyCode: ({ code }: { code: string }) =>
+                onVerifyCode({ code, setState }),
         }),
         [state]
     );

@@ -20,7 +20,7 @@ export default function TabsLayout() {
                 backgroundColor: lightTheme.colors.background.light,
             }}
         >
-            <StatusBar barStyle={"dark-content"} />
+            <StatusBar barStyle={"dark-content"} backgroundColor="#fff" />
             <Tabs
                 initialRouteName="index"
                 screenOptions={{ headerShown: false }}
