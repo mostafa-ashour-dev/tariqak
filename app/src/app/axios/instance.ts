@@ -12,9 +12,12 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
     async (config: any) => {
-        const token = await SecureStore.getItemAsync("token");
-        if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
+        const authState = JSON.parse(
+            (await SecureStore.getItemAsync("authState")) as string
+        );
+        console.log("🚀 ~ authState:", authState);
+        if (authState?.tokens?.access_token) {
+            config.headers.Authorization = `Bearer ${authState?.tokens.access_token}`;
         }
         return config;
     },
