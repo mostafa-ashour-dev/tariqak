@@ -11,13 +11,20 @@ const paginateResults = async ({
 }) => {
     try {
         const skip = (parseInt(page, 10) - 1) * parseInt(limit, 10);
-        const results = model && await model
-            .find(query)
-            .skip(skip)
-            .limit(limit)
-            .populate(populate, select)
-            .lean() || results || [];
-        const total = model && await model.countDocuments() || results && results.length || 0;
+        const results =
+            (model &&
+                (await model
+                    .find(query)
+                    .skip(skip)
+                    .limit(limit)
+                    .populate(populate, select)
+                    .lean())) ||
+            results ||
+            [];
+        const total =
+            (model && (await model.countDocuments())) ||
+            (results && results.length) ||
+            0;
         const totalPages = Math.ceil(total / limit);
 
         const pageInfo = {

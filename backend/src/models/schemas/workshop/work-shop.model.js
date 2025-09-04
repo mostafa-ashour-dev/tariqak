@@ -117,7 +117,8 @@ workshopSchema.methods.updateRating = async function () {
     }
 
     const rating =
-        reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length;
+        reviews.reduce((acc, review) => acc + review.rating, 0) /
+        reviews.length;
 
     this.rating = rating;
     await this.save();

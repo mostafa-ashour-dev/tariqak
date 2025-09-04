@@ -12,13 +12,13 @@ const reviewSchema = mongoose.Schema(
                 type: String,
                 required: [true, "Review reference type is required"],
                 trim: true,
-                enum: ["driver", "workshop"],
+                enum: ["driver", "workshop", "gas-station"],
             },
             target: {
                 type: mongoose.Schema.Types.ObjectId,
                 required: [true, "Review reference target is required"],
                 trim: true,
-            }
+            },
         },
         rating: {
             type: Number,

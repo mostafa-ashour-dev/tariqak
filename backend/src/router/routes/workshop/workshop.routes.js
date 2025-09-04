@@ -34,7 +34,7 @@ router.put(
 // Add Workshop Location
 /* /api/v1/workshop/:workshopSlug - POST */
 router.post(
-    "/:workshopSlug",
+    "/:workshopSlug/location",
     authUser("admin"),
     expressAsyncHandler(addWorkshopLocation)
 );

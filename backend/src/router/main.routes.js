@@ -7,6 +7,7 @@ import onboardingRoutes from "./routes/onboarding/onboarding.routes";
 import profileRoutes from "./routes/profile/profile.routes";
 import workshopRoutes from "./routes/workshop/workshop.routes";
 import reviewRoutes from "./routes/review/review.routes";
+import gasStationRoutes from "./routes/gas-station/gas-station.routes";
 
 // Auth Routes
 router.use("/auth", authRoutes);
@@ -22,5 +23,8 @@ router.use("/workshop", workshopRoutes);
 
 // Review Routes
 router.use("/review", reviewRoutes);
+
+// Gas Station Routes
+router.use("/gas-station", gasStationRoutes);
 
 export default router;
