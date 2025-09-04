@@ -15,6 +15,7 @@ export default function AuthLayout() {
     useEffect(() => {
         if (!loading && nextStep) {
             const target = `/${nextStep.toLowerCase()}`;
+            if (pathname === "/reset") return;
             if (pathname !== target) {
                 router.replace(target);
             }

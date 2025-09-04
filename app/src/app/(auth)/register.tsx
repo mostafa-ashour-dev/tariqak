@@ -43,7 +43,7 @@ const Register = () => {
     // @ Context
     const { onRegister } = useAuth();
 
-    const [loginBody, setLoginBody] = useState<LoginBody>({
+    const [registerBody, setRegisterBody] = useState<LoginBody>({
         full_name: "",
         phone_number: "",
         email: "",
@@ -56,17 +56,17 @@ const Register = () => {
     const handleRegister = async () => {
         try {
             if (
-                !loginBody.full_name ||
-                !loginBody.password ||
-                !loginBody.email ||
-                !loginBody.phone_number ||
-                !loginBody.role
+                !registerBody.full_name ||
+                !registerBody.password ||
+                !registerBody.email ||
+                !registerBody.phone_number ||
+                !registerBody.role
             ) {
                 Alert.alert("من فضلك أكمل جميع الخانات للمتباعه");
                 return;
             }
             await onRegister({
-                ...loginBody,
+                ...registerBody,
             });
         } catch (error: Error | any) {
             console.log(error);
@@ -101,8 +101,8 @@ const Register = () => {
                         <View style={styles.inputContainer}>
                             <MainInput
                                 onChangeText={(text: string) =>
-                                    setLoginBody({
-                                        ...loginBody,
+                                    setRegisterBody({
+                                        ...registerBody,
                                         full_name: text,
                                     })
                                 }
@@ -117,12 +117,12 @@ const Register = () => {
                         <View style={styles.inputContainer}>
                             <MainInput
                                 onChangeText={(text: string) =>
-                                    setLoginBody({
-                                        ...loginBody,
+                                    setRegisterBody({
+                                        ...registerBody,
                                         phone_number: text,
                                     })
                                 }
-                                value={loginBody.phone_number}
+                                value={registerBody.phone_number}
                                 placeholder="رقم الهاتف"
                                 placeholderTextColor={
                                     lightTheme.colors.text.light
@@ -135,8 +135,8 @@ const Register = () => {
                         <View style={styles.inputContainer}>
                             <MainInput
                                 onChangeText={(text: string) =>
-                                    setLoginBody({
-                                        ...loginBody,
+                                    setRegisterBody({
+                                        ...registerBody,
                                         email: text,
                                     })
                                 }
@@ -188,8 +188,8 @@ const Register = () => {
                         <View style={styles.inputContainer}>
                             <MainInput
                                 onChangeText={(text: string) =>
-                                    setLoginBody({
-                                        ...loginBody,
+                                    setRegisterBody({
+                                        ...registerBody,
                                         password: text,
                                     })
                                 }

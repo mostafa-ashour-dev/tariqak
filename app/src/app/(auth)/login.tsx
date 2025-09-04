@@ -10,8 +10,6 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import {
-    IconButton,
-    IconContainer,
     MainButton,
     MainButtonText,
     MainInput,
@@ -22,7 +20,7 @@ import {
 import { useAuth } from "context/auth/AuthContext";
 import { useRouter } from "expo-router";
 import { lightTheme, theme } from "styles/styles";
-import { Eye, EyeClosed, EyeOff, Lock, User } from "lucide-react-native";
+import { Eye, EyeClosed } from "lucide-react-native";
 import { TouchableOpacity } from "react-native";
 import Back from "components/back";
 
@@ -35,7 +33,8 @@ const Login = () => {
     // @ Toggle Showing password
     const [showPassword, setShowPassword] = useState<boolean>(false);
 
-    const { onLogin } = useAuth();
+    const { onLogin, nextStep } = useAuth();
+
     const [loginBody, setLoginBody] = useState<LoginBody>({
         credential: "",
         password: "",
@@ -64,7 +63,7 @@ const Login = () => {
                 style={{ flex: 1 }}
                 behavior={Platform.OS === "ios" ? "padding" : "height"}
             >
-                <Back value="رجوع" path="/" />
+                {nextStep !== "LOGIN" && <Back value="رجوع" path="/" />}
                 <View
                     style={{
                         flex: 1,
@@ -141,6 +140,7 @@ const Login = () => {
                                 marginLeft: "auto",
                                 marginRight: 40,
                             }}
+                            onPress={() => router.push("reset")}
                         >
                             <MainLinkText fontSize="16px">
                                 نسيت كلمة المرور؟
@@ -154,23 +154,25 @@ const Login = () => {
                         >
                             <MainButtonText>تسجيل دخول</MainButtonText>
                         </MainButton>
-                        <TouchableOpacity
-                            onPress={() => router.push("/register")}
-                            style={{
-                                marginTop: theme.margin.lg,
-                                gap: theme.spacing.xs,
-                                flexDirection: "row",
-                                alignItems: "baseline",
-                                justifyContent: "center",
-                            }}
-                        >
-                            <MainLinkText fontSize="16px">
-                                إنشاء حساب جديد
-                            </MainLinkText>
-                            <SecondaryText fontSize="16px">
-                                ليس لديك حساب؟
-                            </SecondaryText>
-                        </TouchableOpacity>
+                        {nextStep !== "LOGIN" && (
+                            <TouchableOpacity
+                                onPress={() => router.push("/register")}
+                                style={{
+                                    marginTop: theme.margin.lg,
+                                    gap: theme.spacing.xs,
+                                    flexDirection: "row",
+                                    alignItems: "baseline",
+                                    justifyContent: "center",
+                                }}
+                            >
+                                <MainLinkText fontSize="16px">
+                                    إنشاء حساب جديد
+                                </MainLinkText>
+                                <SecondaryText fontSize="16px">
+                                    ليس لديك حساب؟
+                                </SecondaryText>
+                            </TouchableOpacity>
+                        )}
                     </View>
                 </View>
             </KeyboardAvoidingView>

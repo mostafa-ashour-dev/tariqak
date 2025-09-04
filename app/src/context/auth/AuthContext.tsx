@@ -7,10 +7,10 @@ import { onRequestVerificationCode } from "./actions/onRequestVerificationCode";
 
 type nextStep =
     | "LOGIN"
+    | "REGISTER"
     | "VERIFY"
     | "HOME"
     | "DRIVER_ONBOARDING"
-    | "REGISTER"
     | null;
 
 type State = {
@@ -57,7 +57,7 @@ export default function AuthProvider({ children }: any) {
                     tokens: parsed.tokens,
                     is_verified: parsed.is_verified,
                     loading: false,
-                    nextStep: parsed.nextStep || "LOGIN",
+                    nextStep: parsed.nextStep || null,
                 });
             } else {
                 setState({
