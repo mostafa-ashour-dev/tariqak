@@ -23,7 +23,7 @@ function AppContent() {
         );
     }
 
-    const authSteps = ["DRIVER_ONBOARDING", "VERIFY", "LOGIN", "REGISTER"];
+    const authSteps = ["DRIVER_ONBOARDING", "VERIFY"];
     if (authSteps.includes(nextStep as string)) {
         return (
             <Stack screenOptions={{ headerShown: false }}>

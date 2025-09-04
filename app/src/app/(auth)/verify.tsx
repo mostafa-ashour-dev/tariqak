@@ -15,10 +15,12 @@ import {
     MainButton,
     MainButtonText,
     MainInput,
+    MainText,
     MainTitle,
 } from "components/styledComponents";
 import { useAuth } from "context/auth/AuthContext";
 import { lightTheme, theme } from "styles/styles";
+import { useRouter } from "expo-router";
 
 type ReqVerifyBody = {
     type: "email" | "phone_number";
@@ -33,37 +35,24 @@ const Verify = () => {
     // @ Toggle Showing password
     const [isSent, setIsSent] = useState<boolean>(false);
 
-    const { onRequestVerificationCode, onVerifyCode } = useAuth();
+    const { onRequestVerificationCode, onVerifyCode, user } = useAuth();
     const [reqVerifyBody, setReqVerifyBody] = useState<ReqVerifyBody>({
         type: "phone_number",
-        credential: null,
+        credential: user?.phone_number || null,
     });
 
     const [verifyBody, setVerifyBody] = useState<VerifyBody>({
         code: null,
     });
 
+    const router = useRouter();
+
     const handleReqVerifyCode = async () => {
         try {
-            if (
-                reqVerifyBody.type === "phone_number" &&
-                !/^\d+$/.test(reqVerifyBody.credential!)
-            ) {
-                Alert.alert("من فضلك قم بادخال رقم هاتف صحيح");
-                return;
-            }
-
-            if (
-                reqVerifyBody.type === "email" &&
-                typeof reqVerifyBody.credential !== "string"
-            ) {
-                Alert.alert("من فضلك قم بادخال بريد الكتروني صحيح");
-                return;
-            }
-            await onRequestVerificationCode({
+            const { success } = await onRequestVerificationCode({
                 ...reqVerifyBody,
             });
-            setIsSent(true);
+            success && setIsSent(true);
         } catch (error: Error | any) {
             console.log(error);
             Alert.alert("Error", error.message);
@@ -75,10 +64,14 @@ const Verify = () => {
             if (!verifyBody.code) {
                 Alert.alert("من فضلك أدخل الرمز للمتباعه");
                 return;
+            } else if (verifyBody.code.length !== 6) {
+                Alert.alert("من فضلك ادخل رمز صحيح");
+                return;
             }
-            await onVerifyCode({
+            const { success } = await onVerifyCode({
                 ...verifyBody,
             });
+            success && router.push("/login");
         } catch (error: Error | any) {
             console.log(error);
             Alert.alert("Error", error.message);
@@ -125,6 +118,10 @@ const Verify = () => {
                                                         onPress={() =>
                                                             setReqVerifyBody({
                                                                 credential:
+                                                                    (r ===
+                                                                    "email"
+                                                                        ? user?.email
+                                                                        : user?.phone_number) ||
                                                                     null,
                                                                 type:
                                                                     r ===
@@ -158,45 +155,10 @@ const Verify = () => {
                                         </View>
                                     </View>
                                 </View>
-                                <View style={styles.inputContainer}>
-                                    <Caption
-                                        color={
-                                            lightTheme.colors.text.darkSecond
-                                        }
-                                        style={{
-                                            marginTop: 3,
-                                            marginLeft: 5,
-                                        }}
-                                        fontSize="13px"
-                                    >
-                                        {reqVerifyBody.type === "email"
-                                            ? "البريد الألكتروني:"
-                                            : "رقم الهاتف:"}
-                                    </Caption>
-                                    <MainInput
-                                        value={reqVerifyBody.credential ?? null}
-                                        onChangeText={(input: string) =>
-                                            setReqVerifyBody({
-                                                ...reqVerifyBody,
-                                                credential: input,
-                                            })
-                                        }
-                                        placeholder={
-                                            reqVerifyBody.type === "email"
-                                                ? "إدخال البريد الألكتروني"
-                                                : "إدخال رقم الهاتف"
-                                        }
-                                        placeholderTextColor={
-                                            lightTheme.colors.text.light
-                                        }
-                                        fontSize="15px"
-                                        cursorColor={lightTheme.colors.primary}
-                                        keyboardType={
-                                            reqVerifyBody.type === "email"
-                                                ? "email-address"
-                                                : "phone-pad"
-                                        }
-                                    />
+                                <View style={styles.infoContainer}>
+                                    <MainText style={styles.info}>
+                                        {reqVerifyBody.credential}
+                                    </MainText>
                                 </View>
                             </>
                         )}
@@ -220,17 +182,6 @@ const Verify = () => {
                                     {reqVerifyBody.credential}
                                 </Text>
                                 <View style={styles.inputContainer}>
-                                    <Caption
-                                        color={
-                                            lightTheme.colors.text.darkSecond
-                                        }
-                                        style={{
-                                            marginTop: 2,
-                                            marginLeft: 10,
-                                        }}
-                                    >
-                                        رمز التحقق :
-                                    </Caption>
                                     <MainInput
                                         onChangeText={(input: string) =>
                                             setVerifyBody({
@@ -256,7 +207,7 @@ const Verify = () => {
                                 isSent ? handleVerify : handleReqVerifyCode
                             }
                             style={{ marginTop: 27 }}
-                            width="70%"
+                            width="80%"
                         >
                             <MainButtonText>
                                 {isSent
@@ -272,6 +223,25 @@ const Verify = () => {
 };
 
 const styles = StyleSheet.create({
+    infoContainer: {
+        backgroundColor: "transparent",
+        borderRadius: theme.radius.sm,
+        paddingHorizontal: 10,
+        paddingVertical: 6,
+        flexDirection: "row-reverse",
+        justifyContent: "center",
+        alignItems: "center",
+        width: "80%",
+        borderColor: lightTheme.colors.border.gray,
+        borderWidth: 1,
+        borderStyle: "dotted",
+        marginTop: 10,
+    },
+    info: {
+        fontSize: theme.fontSizes.md,
+        color: lightTheme.colors.secondary,
+        fontFamily: theme.fontFamilies.secondary.regular,
+    },
     inputContainer: {
         flexDirection: "row-reverse",
         alignItems: "center",

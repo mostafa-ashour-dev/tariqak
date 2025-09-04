@@ -33,6 +33,9 @@ type LoginBody = {
     role: string;
 };
 
+// MO TODO ENHANCE ERROR HANDLING & CHECKING IF THE DATA IS CORRECT
+// MO TODO SETUP LOADING STATES FOR ALL ACTIONS
+
 const Register = () => {
     // @ Toggle User Role
     const [role, setRole] = useState<"user" | "driver">("user");
@@ -256,7 +259,7 @@ const styles = StyleSheet.create({
     inputContainer: {
         flexDirection: "row-reverse",
         alignItems: "center",
-        width: "85%",
+        width: "80%",
         marginTop: 10,
     },
     rolesContainer: {

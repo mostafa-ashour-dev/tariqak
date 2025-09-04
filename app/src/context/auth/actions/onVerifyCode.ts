@@ -17,13 +17,13 @@ export const onVerifyCode = async ({ code, setState }: Props) => {
             setState((prev: any) => ({
                 ...prev,
                 isVerified: true,
-                nextStep: "LOGIN",
+                nextStep: null,
             }));
 
             const authState = {
                 user: null,
                 isVerified: true,
-                nextStep: "LOGIN",
+                nextStep: null,
                 tokens: { refresh_token: null, access_token: null },
             };
             await SecureStore.setItemAsync(
@@ -38,5 +38,7 @@ export const onVerifyCode = async ({ code, setState }: Props) => {
         }
     } catch (error: Error | any) {
         throw new Error(error.message as string);
+    } finally {
+        setState((prev: any) => ({ ...prev, loading: false }));
     }
 };

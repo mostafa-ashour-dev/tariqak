@@ -5,17 +5,16 @@ import { onRegister } from "./actions/onRegister";
 import { onVerifyCode } from "./actions/onVerifyCode";
 import { onRequestVerificationCode } from "./actions/onRequestVerificationCode";
 
-type nextStep =
-    | "LOGIN"
-    | "REGISTER"
-    | "VERIFY"
-    | "HOME"
-    | "DRIVER_ONBOARDING"
-    | null;
+type nextStep = "VERIFY" | "HOME" | "DRIVER_ONBOARDING" | null;
 
 type State = {
     is_verified: boolean | null;
-    user: null | object;
+    user: null | {
+        full_name: string;
+        email: string;
+        phone_number: string;
+        role: string;
+    };
     tokens: {
         access_token: null | string;
         refresh_token: null | string;
@@ -92,7 +91,7 @@ export default function AuthProvider({ children }: any) {
             }: {
                 type: "email" | "phone_number";
                 credential: string;
-            }) => onRequestVerificationCode({ type, credential }),
+            }) => onRequestVerificationCode({ type, credential, setState }),
             onVerifyCode: ({ code }: { code: string }) =>
                 onVerifyCode({ code, setState }),
         }),

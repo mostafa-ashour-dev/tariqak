@@ -18,10 +18,11 @@ export const onRegister = async ({ credentials, setState }: Props) => {
             "/auth/register",
             credentials
         );
+        const { data } = response;
         if (response.status === 200) {
             setState((prev: any) => ({
                 ...prev,
-                user: null,
+                user: data.data.user,
                 is_verified: false,
                 nextStep: "VERIFY",
                 tokens: { refresh_token: null, access_token: null },
@@ -29,7 +30,7 @@ export const onRegister = async ({ credentials, setState }: Props) => {
 
             const authState = {
                 tokens: { refresh_token: null, access_token: null },
-                user: null,
+                user: data.data.user,
                 is_verified: false,
                 nextStep: "VERIFY",
             };

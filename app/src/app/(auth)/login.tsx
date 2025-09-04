@@ -33,7 +33,7 @@ const Login = () => {
     // @ Toggle Showing password
     const [showPassword, setShowPassword] = useState<boolean>(false);
 
-    const { onLogin, nextStep } = useAuth();
+    const { onLogin } = useAuth();
 
     const [loginBody, setLoginBody] = useState<LoginBody>({
         credential: "",
@@ -63,7 +63,7 @@ const Login = () => {
                 style={{ flex: 1 }}
                 behavior={Platform.OS === "ios" ? "padding" : "height"}
             >
-                {nextStep !== "LOGIN" && <Back value="رجوع" path="/" />}
+                <Back value="رجوع" path="/" />
                 <View
                     style={{
                         flex: 1,
@@ -150,29 +150,28 @@ const Login = () => {
                         <MainButton
                             onPress={handleLogin}
                             style={{ marginTop: 24 }}
-                            width="70%"
+                            width="80%"
                         >
                             <MainButtonText>تسجيل دخول</MainButtonText>
                         </MainButton>
-                        {nextStep !== "LOGIN" && (
-                            <TouchableOpacity
-                                onPress={() => router.push("/register")}
-                                style={{
-                                    marginTop: theme.margin.lg,
-                                    gap: theme.spacing.xs,
-                                    flexDirection: "row",
-                                    alignItems: "baseline",
-                                    justifyContent: "center",
-                                }}
-                            >
-                                <MainLinkText fontSize="16px">
-                                    إنشاء حساب جديد
-                                </MainLinkText>
-                                <SecondaryText fontSize="16px">
-                                    ليس لديك حساب؟
-                                </SecondaryText>
-                            </TouchableOpacity>
-                        )}
+
+                        <TouchableOpacity
+                            onPress={() => router.push("/register")}
+                            style={{
+                                marginTop: theme.margin.lg,
+                                gap: theme.spacing.xs,
+                                flexDirection: "row",
+                                alignItems: "baseline",
+                                justifyContent: "center",
+                            }}
+                        >
+                            <MainLinkText fontSize="16px">
+                                إنشاء حساب جديد
+                            </MainLinkText>
+                            <SecondaryText fontSize="16px">
+                                ليس لديك حساب؟
+                            </SecondaryText>
+                        </TouchableOpacity>
                     </View>
                 </View>
             </KeyboardAvoidingView>
@@ -184,7 +183,7 @@ const styles = StyleSheet.create({
     inputContainer: {
         flexDirection: "row-reverse",
         alignItems: "center",
-        width: "75%",
+        width: "80%",
         marginTop: 10,
     },
 });
