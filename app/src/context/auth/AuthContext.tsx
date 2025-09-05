@@ -9,7 +9,7 @@ import { onResetPassword } from "./actions/onResetPassword";
 import { onVerifyResetCode } from "./actions/onVerifyResetCode";
 import { onRequestPasswordCode } from "./actions/onRequestPasswordCode";
 
-type nextStep = "VERIFY" | "HOME" | "DRIVER_ONBOARDING" | "WELCOME" | null;
+type nextStep = "VERIFY" | "HOME" | "DRIVER_ONBOARDING" | "WELCOME";
 
 type State = {
     user: null | {
@@ -48,7 +48,7 @@ export default function AuthProvider({ children }: any) {
             refresh_token: null,
         },
         loading: true,
-        nextStep: null,
+        nextStep: "WELCOME",
     });
 
     useEffect(() => {
@@ -70,7 +70,7 @@ export default function AuthProvider({ children }: any) {
                     user: null,
                     tokens: { access_token: null, refresh_token: null },
                     loading: false,
-                    nextStep: null,
+                    nextStep: "WELCOME",
                 });
             }
         };

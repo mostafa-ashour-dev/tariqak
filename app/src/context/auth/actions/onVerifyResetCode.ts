@@ -6,6 +6,9 @@ type Props = {
 };
 
 export const onVerifyResetCode = async ({ code, setState }: Props) => {
+    // return {
+    //     success: true,
+    // };
     try {
         const response = await axiosInstance.post(
             "/auth/verify/password-reset",

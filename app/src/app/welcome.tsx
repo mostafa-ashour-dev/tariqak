@@ -9,8 +9,14 @@ import {
 import { theme } from "styles/styles";
 import { router } from "expo-router";
 import { StatusBar } from "react-native";
+import { useAuth } from "context/auth/AuthContext";
 
 const Welcome = () => {
+    const { nextStep, user, tokens } = useAuth();
+    console.log("🚀 ~ Welcome ~ tokens:", tokens);
+    console.log("🚀 ~ Welcome ~ user:", user);
+    console.log("🚀 ~ Welcome ~ nextStep:", nextStep);
+
     return (
         <View style={{ flexDirection: "column" }}>
             <Image

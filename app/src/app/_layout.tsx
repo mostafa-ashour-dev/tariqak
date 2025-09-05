@@ -9,14 +9,6 @@ SplashScreen.preventAutoHideAsync();
 function AppContent() {
     const { loading, nextStep } = useAuth();
 
-    const router = useRouter();
-    useEffect(() => {
-        if (nextStep === "WELCOME") {
-            router.replace("/");
-            return;
-        }
-    }, [loading, nextStep]);
-
     if (loading) {
         return (
             <View
@@ -31,8 +23,6 @@ function AppContent() {
         );
     }
 
-    console.log(`From main _layout: ${nextStep}`);
-
     const authSteps = ["DRIVER_ONBOARDING", "VERIFY"];
     if (authSteps.includes(nextStep as string)) {
         return (
@@ -46,10 +36,10 @@ function AppContent() {
                 <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             </Stack>
         );
-    } else if (nextStep === null || nextStep === "WELCOME") {
+    } else if (nextStep === "WELCOME") {
         return (
             <Stack screenOptions={{ headerShown: false }}>
-                <Stack.Screen name="index" options={{ headerShown: false }} />
+                <Stack.Screen name="welcome" options={{ headerShown: false }} />
             </Stack>
         );
     }

@@ -15,10 +15,10 @@ export default function TabsLayout() {
         );
         NavigationBar.setButtonStyleAsync("dark");
     }, []);
-    // if (nextStep === "WELCOME") {
-    //     router.replace("/");
-    // }
-    console.log(`tabs mounted, ${nextStep}`);
+    if (nextStep === "WELCOME") {
+        router.replace("welcome");
+    }
+    console.log(`tabs group mounted, ${nextStep}`);
     return (
         <SafeAreaView
             edges={["bottom", "top"]}

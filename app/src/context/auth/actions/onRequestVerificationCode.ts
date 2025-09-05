@@ -11,6 +11,9 @@ export const onRequestVerificationCode = async ({
     credential,
     setState,
 }: Props) => {
+    // return {
+    //     success: true,
+    // };
     try {
         const response = await axiosInstance.post(
             "/auth/request-verification-code",

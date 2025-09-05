@@ -13,6 +13,27 @@ type Props = {
 };
 
 export const onRegister = async ({ credentials, setState }: Props) => {
+    // const user = {
+    //     full_name: credentials.full_name,
+    //     phone_number: credentials.phone_number,
+    //     email: credentials.email,
+    //     password: credentials.password,
+    //     role: credentials.role,
+    // };
+
+    // setState((prev: any) => ({
+    //     ...prev,
+    //     user: user,
+    //     nextStep: "VERIFY",
+    // }));
+
+    // const authState = {
+    //     user: user,
+    //     nextStep: "VERIFY",
+    // };
+    // console.log(`AuthState to set in register: ${authState}`);
+    // await SecureStore.setItemAsync("authState", JSON.stringify(authState));
+    // return;
     try {
         const response = await axiosInstance.post(
             "/auth/register",

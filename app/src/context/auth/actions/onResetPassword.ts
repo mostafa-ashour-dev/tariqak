@@ -13,6 +13,9 @@ export const onResetPassword = async ({
     code,
     setState,
 }: Props) => {
+    // return {
+    //     success: true,
+    // };
     try {
         const response = await axiosInstance.post("/auth/reset-password", {
             credential,

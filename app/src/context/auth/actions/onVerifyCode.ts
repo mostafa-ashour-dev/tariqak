@@ -7,6 +7,23 @@ type Props = {
 };
 
 export const onVerifyCode = async ({ code, setState }: Props) => {
+    // setState((prev: any) => ({
+    //     ...prev,
+    //     isVerified: true,
+    //     nextStep: "WELCOME",
+    // }));
+
+    // const authState = {
+    //     user: null,
+    //     isVerified: true,
+    //     nextStep: "WELCOME",
+    //     tokens: { refresh_token: null, access_token: null },
+    // };
+    // await SecureStore.setItemAsync("authState", JSON.stringify(authState));
+
+    // return {
+    //     success: true,
+    // };
     try {
         const response = await axiosInstance.post(
             "/auth/verify/verification-code",
@@ -17,13 +34,13 @@ export const onVerifyCode = async ({ code, setState }: Props) => {
             setState((prev: any) => ({
                 ...prev,
                 isVerified: true,
-                nextStep: null,
+                nextStep: "WELCOME",
             }));
 
             const authState = {
                 user: null,
                 isVerified: true,
-                nextStep: null,
+                nextStep: "WELCOME",
                 tokens: { refresh_token: null, access_token: null },
             };
             await SecureStore.setItemAsync(

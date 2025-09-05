@@ -22,6 +22,7 @@ import { useAuth } from "context/auth/AuthContext";
 import { lightTheme, theme } from "styles/styles";
 import { useRouter } from "expo-router";
 import { Eye, EyeClosed } from "lucide-react-native";
+import Back from "components/back";
 
 type resetBodyProps = {
     credential: string | null;
@@ -127,6 +128,7 @@ const Reset = () => {
                 style={{ flex: 1 }}
                 behavior={Platform.OS === "ios" ? "padding" : "height"}
             >
+                <Back value="رجوع" path="/login" />
                 <View
                     style={{
                         flex: 1,

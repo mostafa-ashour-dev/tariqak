@@ -11,6 +11,7 @@ export const onRequestPasswordCode = async ({
     credential,
     setState,
 }: Props) => {
+    // return { success: true };
     try {
         await axiosInstance.post("/auth/request-password-code", {
             type,

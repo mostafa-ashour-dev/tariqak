@@ -6,6 +6,18 @@ type Props = {
 };
 
 export const onLogout = async ({ setState }: Props) => {
+    // const state = {
+    //     user: null,
+    //     nextStep: "WELCOME",
+    //     tokens: { refresh_token: null, access_token: null },
+    // };
+
+    // setState(state);
+
+    // await SecureStore.setItemAsync("authState", JSON.stringify(state));
+    // return {
+    //     success: true,
+    // };
     try {
         const response = await axiosInstance.post("/auth/logout");
 
