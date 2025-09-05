@@ -23,15 +23,11 @@ export const onRegister = async ({ credentials, setState }: Props) => {
             setState((prev: any) => ({
                 ...prev,
                 user: data.data.user,
-                is_verified: false,
                 nextStep: "VERIFY",
-                tokens: { refresh_token: null, access_token: null },
             }));
 
             const authState = {
-                tokens: { refresh_token: null, access_token: null },
                 user: data.data.user,
-                is_verified: false,
                 nextStep: "VERIFY",
             };
 

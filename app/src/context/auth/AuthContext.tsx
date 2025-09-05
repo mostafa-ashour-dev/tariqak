@@ -5,11 +5,13 @@ import { onRegister } from "./actions/onRegister";
 import { onVerifyCode } from "./actions/onVerifyCode";
 import { onRequestVerificationCode } from "./actions/onRequestVerificationCode";
 import { onLogout } from "./actions/onLogout";
+import { onResetPassword } from "./actions/onResetPassword";
+import { onVerifyResetCode } from "./actions/onVerifyResetCode";
+import { onRequestPasswordCode } from "./actions/onRequestPasswordCode";
 
 type nextStep = "VERIFY" | "HOME" | "DRIVER_ONBOARDING" | "WELCOME" | null;
 
 type State = {
-    is_verified: boolean | null;
     user: null | {
         full_name: string;
         email: string;
@@ -30,6 +32,9 @@ type ContextType = State & {
     onRequestVerificationCode: any;
     onVerifyCode: any;
     onLogout: any;
+    onResetPassword: any;
+    onVerifyResetCode: any;
+    onRequestResetPassword: any;
 };
 
 const AuthContext = createContext({} as ContextType);
@@ -42,7 +47,6 @@ export default function AuthProvider({ children }: any) {
             access_token: null,
             refresh_token: null,
         },
-        is_verified: null,
         loading: true,
         nextStep: null,
     });
@@ -50,13 +54,14 @@ export default function AuthProvider({ children }: any) {
     useEffect(() => {
         const getUser = async () => {
             const authState = await SecureStore.getItemAsync("authState");
-
+            console.log(authState);
+            // _ CLEAR AUTH STATE:
+            // SecureStore.deleteItemAsync("authState");
             if (authState) {
                 const parsed = JSON.parse(authState);
                 setState({
                     user: parsed.user,
                     tokens: parsed.tokens,
-                    is_verified: parsed.is_verified,
                     loading: false,
                     nextStep: parsed.nextStep,
                 });
@@ -64,7 +69,6 @@ export default function AuthProvider({ children }: any) {
                 setState({
                     user: null,
                     tokens: { access_token: null, refresh_token: null },
-                    is_verified: false,
                     loading: false,
                     nextStep: null,
                 });
@@ -96,7 +100,25 @@ export default function AuthProvider({ children }: any) {
             }) => onRequestVerificationCode({ type, credential, setState }),
             onVerifyCode: ({ code }: { code: string }) =>
                 onVerifyCode({ code, setState }),
-            onLogout: () => onLogout({setState})
+            onLogout: () => onLogout({ setState }),
+            onRequestResetPassword: ({
+                type,
+                credential,
+            }: {
+                type: "email" | "phone_number";
+                credential: string;
+            }) => onRequestPasswordCode({ type, credential, setState }),
+            onVerifyResetCode: (code: string) =>
+                onVerifyResetCode({ code, setState }),
+            onResetPassword: ({
+                credential,
+                code,
+                new_password,
+            }: {
+                credential: string;
+                code: string;
+                new_password: string;
+            }) => onResetPassword({ credential, code, new_password, setState }),
         }),
         [state]
     );
