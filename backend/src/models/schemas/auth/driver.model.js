@@ -10,7 +10,8 @@ const driverSchema = mongoose.Schema(
             unique: true,
         },
         license_image: {
-            type: String,
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Image",
             required: [true, "Driver license image is required"],
             trim: true,
         },
@@ -27,8 +28,9 @@ const driverSchema = mongoose.Schema(
             },
         },
         car_image: {
-            type: String,
-            default: "",
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Image",
+            default: null,
             trim: true,
         },
         areas: [

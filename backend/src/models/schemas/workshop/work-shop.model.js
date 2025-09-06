@@ -29,7 +29,8 @@ const workshopSchema = mongoose.Schema(
             maxLength: 2500,
         },
         images: {
-            type: [String],
+            type: [mongoose.Schema.Types.ObjectId],
+            ref: "Image",
             default: [],
         },
         services: {
@@ -58,8 +59,9 @@ const workshopSchema = mongoose.Schema(
             default: 0,
         },
         logo: {
-            type: String,
-            default: "",
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Image",
+            default: null,
         },
         locations: [
             {
