@@ -55,7 +55,7 @@ const register = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    await User.create({
+    const newUser = await User.create({
         full_name,
         phone_number: correctedPhoneNumber,
         username,
@@ -71,7 +71,9 @@ const register = async (req, res) => {
         success: true,
         type: "success",
         message: "User registered successfully",
-        data: null,
+        data: {
+            user: newUser,
+        },
     });
 };
 
@@ -121,7 +123,7 @@ const requestVerificationCode = async (req, res) => {
 
 const verifyCode = async (req, res) => {
     const { code } = req.body || {};
-    const { type } = req.params || "verification_code";
+    const { type } = req.params || "verification-code";
     const missingFields = returnMissingFields({ code });
 
     if (missingFields.length > 0) {
@@ -143,7 +145,7 @@ const verifyCode = async (req, res) => {
         );
     }
 
-    if (type === "password_reset") {
+    if (type === "password-reset") {
         if (user.reset_password_expiration < Date.now()) {
             throw new ResponseError(
                 400,
@@ -151,7 +153,7 @@ const verifyCode = async (req, res) => {
                 "Reset password code expired"
             );
         }
-    } else {
+    } else if (type === "verification-code") {
         if (user.verification_code_expiration < Date.now()) {
             throw new ResponseError(
                 400,
@@ -163,12 +165,14 @@ const verifyCode = async (req, res) => {
         user.verification_code = undefined;
         user.verification_code_expiration = undefined;
         user.is_verified = true;
+    } else {
+        throw new ResponseError(400, "Input Error", "Invalid type");
     }
 
     await user.save();
 
     const message =
-        type === "password_reset"
+        type === "password-reset"
             ? "Password reset code verified successfully"
             : "User verified successfully";
     res.status(200).json({
@@ -256,10 +260,6 @@ const login = async (req, res) => {
 
     if (!user) {
         throw new ResponseError(400, "Input Error", "Invalid credential");
-    }
-
-    if (!user.is_verified) {
-        throw new ResponseError(400, "Input Error", "User is not verified");
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);

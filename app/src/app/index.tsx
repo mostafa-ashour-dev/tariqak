@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, View } from "react-native";
 import React from "react";
 import {
     Caption,
@@ -21,7 +21,11 @@ const Welcome = () => {
                 <MainTitle style={{ marginTop: 1 }} fontSize={"50px"}>
                     طريقك
                 </MainTitle>
-                <Caption fontSize="15px" lineHeight="20px" style={{ paddingHorizontal: 15, width: "80%" }}>
+                <Caption
+                    fontSize="15px"
+                    lineHeight="20px"
+                    style={{ paddingHorizontal: 15, width: "80%" }}
+                >
                     كل اللي محتاجه لعربيتك ... هتلاقيه في تطبيق طريقك.
                 </Caption>
                 <MainButton
@@ -39,7 +43,13 @@ const Welcome = () => {
                 </MainButton>
             </View>
 
-            <StatusBar barStyle="light-content" backgroundColor={"transparent"} animated showHideTransition={"fade"} hidden={true} />
+            <StatusBar
+                barStyle="light-content"
+                backgroundColor={"transparent"}
+                animated
+                showHideTransition={"fade"}
+                hidden={true}
+            />
         </View>
     );
 };
@@ -57,6 +67,5 @@ const styles = StyleSheet.create({
         alignItems: "center",
         padding: theme.padding.xl,
         paddingTop: 25,
-
     },
 });

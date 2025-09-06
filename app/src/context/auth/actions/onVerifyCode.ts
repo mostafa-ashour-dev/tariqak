@@ -1,44 +1,40 @@
-import axiosInstance from "app/axios/instance";
 import * as SecureStore from "expo-secure-store";
+import axiosInstance from "app/axios/instance";
 
 type Props = {
-    credentials: {
-        full_name: string;
-        phone_number: string;
-        email: string;
-        password: string;
-        role: string;
-    };
+    code: string;
     setState: any;
 };
 
-export const onRegister = async ({ credentials, setState }: Props) => {
+export const onVerifyCode = async ({ code, setState }: Props) => {
     try {
         const response = await axiosInstance.post(
-            "/auth/register",
-            credentials
+            "/auth/verify/verification-code",
+            { code }
         );
-        const { data } = response;
+
         if (response.status === 200) {
             setState((prev: any) => ({
                 ...prev,
-                user: data.data.user,
-                is_verified: false,
-                nextStep: "VERIFY",
-                tokens: { refresh_token: null, access_token: null },
+                isVerified: true,
+                nextStep: null,
             }));
 
             const authState = {
+                user: null,
+                isVerified: true,
+                nextStep: null,
                 tokens: { refresh_token: null, access_token: null },
-                user: data.data.user,
-                is_verified: false,
-                nextStep: "VERIFY",
             };
-
             await SecureStore.setItemAsync(
                 "authState",
                 JSON.stringify(authState)
             );
+
+            return {
+                success: true,
+                message: response.data.message,
+            };
         }
     } catch (error: Error | any) {
         throw new Error(error.message as string);

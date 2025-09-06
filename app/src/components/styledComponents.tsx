@@ -25,13 +25,16 @@ export const MainTitle = styled(MainText)<MainTitleProps>`
 type CaptionProps = TextProps & {
     fontSize?: string;
     lineHeight?: string;
+    textAlgin?: string;
+    color?: string;
 };
 export const Caption = styled.Text<CaptionProps>`
     font-family: ${theme.fontFamilies.secondary.medium};
-    color: ${lightTheme.colors.text.light};
+    color: ${({ color }: CaptionProps) =>
+        color || lightTheme.colors.text.light};
     font-size: ${({ fontSize }: CaptionProps) =>
         fontSize || theme.fontSizes["md"]};
-    text-align: center;
+    text-align: ${({ textAlgin }: CaptionProps) => textAlgin || "right"};
     line-height: ${({ lineHeight }: CaptionProps) => lineHeight || "16px"};
 `;
 
@@ -47,7 +50,7 @@ export const MainButton = styled.TouchableOpacity<MainButtonProps>`
     justify-content: center;
     align-items: center;
     padding: ${({ outlined }: MainButtonProps) =>
-        outlined ? `${theme.padding.md}` : `${theme.padding.md + 2}`}px;
+        outlined ? `${theme.padding.md + 2}` : `${theme.padding.md + 4}`}px;
     border-radius: ${theme.radius.full}px;
     border: ${({ outlined }: MainButtonProps) =>
         outlined ? `2px solid ${lightTheme.colors.primary}` : "none"};
@@ -66,14 +69,18 @@ export const MainButtonText = styled.Text<MainButtonTextProps>`
 type InputProps = TextInputProps & {
     fontSize?: string;
     textAlgin?: string;
+    flex?: number;
+    width?: string;
+    padding?: string;
 };
 export const MainInput = styled.TextInput<InputProps>`
-    flex: 1;
+    flex: ${({ flex }: InputProps) => flex || 1};
     background-color: white;
     border-radius: ${theme.radius.sm}px;
-    padding: 10px;
+    padding: ${({ padding }: InputProps) => padding || "10px"};
+    height: auto;
     border: 1px solid ${lightTheme.colors.border.gray};
-    width: 100%;
+    width: ${({ width }: InputProps) => width || "100%"};
     font-size: ${({ fontSize }: InputProps) =>
         fontSize || theme.fontSizes["md"]};
     color: ${lightTheme.colors.text.dark};

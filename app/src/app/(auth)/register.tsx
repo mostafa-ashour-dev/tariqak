@@ -1,18 +1,15 @@
 import {
     View,
-    Alert,
     StyleSheet,
     TouchableWithoutFeedback,
     Keyboard,
     KeyboardAvoidingView,
     Platform,
     Pressable,
-    TouchableHighlight,
+    Alert,
 } from "react-native";
 import React, { useState } from "react";
 import {
-    IconButton,
-    IconContainer,
     MainButton,
     MainButtonText,
     MainInput,
@@ -23,15 +20,7 @@ import {
 import { useAuth } from "context/auth/AuthContext";
 import { useRouter } from "expo-router";
 import { lightTheme, theme } from "styles/styles";
-import {
-    BookUser,
-    Eye,
-    EyeClosed,
-    Lock,
-    Mail,
-    Phone,
-    User,
-} from "lucide-react-native";
+import { Eye, EyeClosed } from "lucide-react-native";
 import { TouchableOpacity } from "react-native";
 import Back from "components/back";
 import { Text } from "react-native";
@@ -44,16 +33,20 @@ type LoginBody = {
     role: string;
 };
 
-const Register = () => {
-    const { onRegister } = useAuth();
+// MO TODO ENHANCE ERROR HANDLING & CHECKING IF THE DATA IS CORRECT
+// MO TODO SETUP LOADING STATES FOR ALL ACTIONS
 
+const Register = () => {
     // @ Toggle User Role
     const [role, setRole] = useState<"user" | "driver">("user");
 
     // @ Toggle Showing password
     const [showPassword, setShowPassword] = useState<boolean>(false);
 
-    const [loginBody, setLoginBody] = useState<LoginBody>({
+    // @ Context
+    const { onRegister } = useAuth();
+
+    const [registerBody, setRegisterBody] = useState<LoginBody>({
         full_name: "",
         phone_number: "",
         email: "",
@@ -66,20 +59,18 @@ const Register = () => {
     const handleRegister = async () => {
         try {
             if (
-                !loginBody.full_name ||
-                !loginBody.password ||
-                !loginBody.email ||
-                !loginBody.phone_number ||
-                !loginBody.role
+                !registerBody.full_name ||
+                !registerBody.password ||
+                !registerBody.email ||
+                !registerBody.phone_number ||
+                !registerBody.role
             ) {
                 Alert.alert("من فضلك أكمل جميع الخانات للمتباعه");
                 return;
             }
             await onRegister({
-                ...loginBody,
+                ...registerBody,
             });
-
-            router.push("/verify");
         } catch (error: Error | any) {
             console.log(error);
             Alert.alert("Error", error.message);
@@ -111,13 +102,10 @@ const Register = () => {
                         }}
                     >
                         <View style={styles.inputContainer}>
-                            <IconContainer style={{ marginLeft: 3 }}>
-                                <User color={lightTheme.colors.text.light} />
-                            </IconContainer>
                             <MainInput
                                 onChangeText={(text: string) =>
-                                    setLoginBody({
-                                        ...loginBody,
+                                    setRegisterBody({
+                                        ...registerBody,
                                         full_name: text,
                                     })
                                 }
@@ -130,17 +118,14 @@ const Register = () => {
                             />
                         </View>
                         <View style={styles.inputContainer}>
-                            <IconContainer style={{ marginLeft: 3 }}>
-                                <Phone color={lightTheme.colors.text.light} />
-                            </IconContainer>
                             <MainInput
                                 onChangeText={(text: string) =>
-                                    setLoginBody({
-                                        ...loginBody,
+                                    setRegisterBody({
+                                        ...registerBody,
                                         phone_number: text,
                                     })
                                 }
-                                value={loginBody.phone_number}
+                                value={registerBody.phone_number}
                                 placeholder="رقم الهاتف"
                                 placeholderTextColor={
                                     lightTheme.colors.text.light
@@ -151,13 +136,10 @@ const Register = () => {
                             />
                         </View>
                         <View style={styles.inputContainer}>
-                            <IconContainer style={{ marginLeft: 3 }}>
-                                <Mail color={lightTheme.colors.text.light} />
-                            </IconContainer>
                             <MainInput
                                 onChangeText={(text: string) =>
-                                    setLoginBody({
-                                        ...loginBody,
+                                    setRegisterBody({
+                                        ...registerBody,
                                         email: text,
                                     })
                                 }
@@ -172,12 +154,6 @@ const Register = () => {
                         </View>
 
                         <View style={styles.inputContainer}>
-                            <IconContainer style={{ marginLeft: 3 }}>
-                                <BookUser
-                                    color={lightTheme.colors.text.light}
-                                />
-                            </IconContainer>
-
                             <View style={styles.rolesContainer}>
                                 <Text style={styles.rolesTitle}>
                                     نوع الحساب
@@ -213,13 +189,10 @@ const Register = () => {
                         </View>
 
                         <View style={styles.inputContainer}>
-                            <IconContainer style={{ marginLeft: 3 }}>
-                                <Lock color={lightTheme.colors.text.light} />
-                            </IconContainer>
                             <MainInput
                                 onChangeText={(text: string) =>
-                                    setLoginBody({
-                                        ...loginBody,
+                                    setRegisterBody({
+                                        ...registerBody,
                                         password: text,
                                     })
                                 }
@@ -286,7 +259,7 @@ const styles = StyleSheet.create({
     inputContainer: {
         flexDirection: "row-reverse",
         alignItems: "center",
-        width: "85%",
+        width: "80%",
         marginTop: 10,
     },
     rolesContainer: {
@@ -307,7 +280,7 @@ const styles = StyleSheet.create({
         fontFamily: theme.fontFamilies.secondary.regular,
     },
     rolesTitle: {
-        fontSize: 15,
+        fontSize: 16,
         color: lightTheme.colors.text.light,
         fontFamily: theme.fontFamilies.secondary.medium,
         marginLeft: "auto",

@@ -10,8 +10,6 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import {
-    IconButton,
-    IconContainer,
     MainButton,
     MainButtonText,
     MainInput,
@@ -22,7 +20,7 @@ import {
 import { useAuth } from "context/auth/AuthContext";
 import { useRouter } from "expo-router";
 import { lightTheme, theme } from "styles/styles";
-import { Eye, EyeClosed, EyeOff, Lock, User } from "lucide-react-native";
+import { Eye, EyeClosed } from "lucide-react-native";
 import { TouchableOpacity } from "react-native";
 import Back from "components/back";
 
@@ -36,6 +34,7 @@ const Login = () => {
     const [showPassword, setShowPassword] = useState<boolean>(false);
 
     const { onLogin } = useAuth();
+
     const [loginBody, setLoginBody] = useState<LoginBody>({
         credential: "",
         password: "",
@@ -52,8 +51,6 @@ const Login = () => {
             await onLogin({
                 ...loginBody,
             });
-
-            router.push("/(tabs)/index");
         } catch (error: Error | any) {
             console.log(error);
             Alert.alert("Error", error.message);
@@ -85,9 +82,6 @@ const Login = () => {
                         }}
                     >
                         <View style={styles.inputContainer}>
-                            <IconContainer style={{ marginLeft: 3 }}>
-                                <User color={lightTheme.colors.text.light} />
-                            </IconContainer>
                             <MainInput
                                 onChangeText={(text: string) =>
                                     setLoginBody({
@@ -104,9 +98,6 @@ const Login = () => {
                             />
                         </View>
                         <View style={styles.inputContainer}>
-                            <IconContainer style={{ marginLeft: 3 }}>
-                                <Lock color={lightTheme.colors.text.light} />
-                            </IconContainer>
                             <MainInput
                                 onChangeText={(text: string) =>
                                     setLoginBody({
@@ -149,6 +140,7 @@ const Login = () => {
                                 marginLeft: "auto",
                                 marginRight: 40,
                             }}
+                            onPress={() => router.push("reset")}
                         >
                             <MainLinkText fontSize="16px">
                                 نسيت كلمة المرور؟
@@ -162,6 +154,7 @@ const Login = () => {
                         >
                             <MainButtonText>تسجيل دخول</MainButtonText>
                         </MainButton>
+
                         <TouchableOpacity
                             onPress={() => router.push("/register")}
                             style={{
@@ -190,7 +183,7 @@ const styles = StyleSheet.create({
     inputContainer: {
         flexDirection: "row-reverse",
         alignItems: "center",
-        width: "85%",
+        width: "80%",
         marginTop: 10,
     },
 });
