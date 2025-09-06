@@ -6,8 +6,9 @@ import connectDB from "./database/connect.db";
 import errorHandler from "../../../../ecaw-dev/projects/AcalynIQ/server/src/errors/errorHandler";
 import routes from "./router/main.routes";
 import messingBodyMiddleware from "./middlewares/missing-body.middleware";
-
+import http from "http";
 const app = express();
+const server = http.createServer(app);
 
 const origins = [
     "http://localhost:3000",
@@ -34,7 +35,7 @@ app.use("/api/v1", routes);
 app.use(errorHandler);
 
 // App initialization
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log(
         `Server is running on: http://localhost:${PORT}\nEnvironment: ${NODE_ENV}`
     );

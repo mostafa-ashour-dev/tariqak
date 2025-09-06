@@ -36,7 +36,8 @@ const gasStationSchema = mongoose.Schema({
         default: "",
     },
     images: {
-        type: [String],
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: "Image",
         default: [],
     },
     rating: {
@@ -44,8 +45,8 @@ const gasStationSchema = mongoose.Schema({
         default: 0,
     },
     logo: {
-        type: String,
-        default: "",
+        type: mongoose.Schema.Types.ObjectId,
+        default: null,
     },
     locations: [
         {

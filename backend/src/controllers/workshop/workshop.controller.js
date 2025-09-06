@@ -64,7 +64,9 @@ const getWorkshop = async (req, res) => {
         );
     }
 
-    const findWorkshop = await Workshop.findOne({ title_slug: workshopSlug });
+    const findWorkshop = await Workshop.findOne({ title_slug: workshopSlug }).populate(
+        "images", "url public_id file_name"
+    );
     if (!findWorkshop) {
         throw new ResponseError(400, "Input Error", "Workshop not found");
     }

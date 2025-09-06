@@ -67,8 +67,9 @@ const userSchema = mongoose.Schema(
             default: "user",
         },
         avatar: {
-            type: String,
-            default: "",
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Image",
+            default: null,
         },
         country: {
             type: String,

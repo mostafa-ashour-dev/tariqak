@@ -8,6 +8,7 @@ import profileRoutes from "./routes/profile/profile.routes";
 import workshopRoutes from "./routes/workshop/workshop.routes";
 import reviewRoutes from "./routes/review/review.routes";
 import gasStationRoutes from "./routes/gas-station/gas-station.routes";
+import uploadRoutes from "./routes/upload/upload.routes";
 
 // Auth Routes
 router.use("/auth", authRoutes);
@@ -26,5 +27,8 @@ router.use("/review", reviewRoutes);
 
 // Gas Station Routes
 router.use("/gas-station", gasStationRoutes);
+
+// Upload Routes
+router.use("/upload", uploadRoutes);
 
 export default router;

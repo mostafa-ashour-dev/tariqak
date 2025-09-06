@@ -256,7 +256,7 @@ const login = async (req, res) => {
             { username: credential },
             { phone_number: correctedPhoneNumber },
         ],
-    });
+    }).populate("avatar", "url public_id file_name");
 
     if (!user) {
         throw new ResponseError(400, "Input Error", "Invalid credential");
