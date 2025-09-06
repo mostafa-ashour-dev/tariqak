@@ -20,7 +20,7 @@ export const onLogin = async ({ credentials, setState }: Props) => {
 
         if (response.status === 200) {
             const user = data?.data?.user;
-            let nextStep: "DRIVER_ONBOARDING" | "HOME" = "HOME";
+            let nextStep: "DRIVER_ONBOARDING" | "HOME" | "VERIFY" = "HOME";
 
             if (user.role === "driver" && !user.is_onboarded) {
                 nextStep = "DRIVER_ONBOARDING";
@@ -29,16 +29,14 @@ export const onLogin = async ({ credentials, setState }: Props) => {
             setState((prev: any) => ({
                 ...prev,
                 user,
-                is_verified: user?.is_verified,
                 tokens: data?.data?.tokens,
                 nextStep,
             }));
 
-            console.log("🚀 ~ user:", user);
+            console.log("🚀 ~ LOGIN: user:", user);
 
             const authState = {
                 user,
-                is_verified: user.is_verified,
                 tokens: data.data.tokens,
                 nextStep,
             };

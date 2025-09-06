@@ -32,7 +32,6 @@ type VerifyBody = {
 };
 
 const Verify = () => {
-    // @ Toggle Showing password
     const [isSent, setIsSent] = useState<boolean>(false);
 
     const { onRequestVerificationCode, onVerifyCode, user } = useAuth();
