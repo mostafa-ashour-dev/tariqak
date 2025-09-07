@@ -6,9 +6,7 @@ import Driver from "../../models/schemas/auth/driver.model";
 const driverOnboarding = async (req, res) => {
     const { user } = req;
     const {
-        license_image,
         car_plate,
-        car_image,
         car_model,
         car_color,
         active_period,
@@ -17,7 +15,6 @@ const driverOnboarding = async (req, res) => {
     } = req.body || {};
 
     const missingFields = returnMissingFields({
-        license_image,
         car_plate,
         car_model,
         car_color,
@@ -54,11 +51,9 @@ const driverOnboarding = async (req, res) => {
         );
     }
 
-    const driver = await Driver.create({
+    await Driver.create({
         user: user._id,
-        license_image,
         car_plate,
-        car_image,
         car_model,
         car_color,
         active_period,

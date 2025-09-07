@@ -12,7 +12,7 @@ const driverSchema = mongoose.Schema(
         license_image: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Image",
-            required: [true, "Driver license image is required"],
+            default: null,
             trim: true,
         },
         car_plate: {
