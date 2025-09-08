@@ -8,6 +8,7 @@ import { onLogout } from "./actions/onLogout";
 import { onResetPassword } from "./actions/onResetPassword";
 import { onVerifyResetCode } from "./actions/onVerifyResetCode";
 import { onRequestPasswordCode } from "./actions/onRequestPasswordCode";
+import { onDriverOnboarding } from "./actions/onDriverOnboarding";
 
 type nextStep = "VERIFY" | "HOME" | "DRIVER_ONBOARDING" | "WELCOME";
 
@@ -35,6 +36,7 @@ type ContextType = State & {
     onResetPassword: any;
     onVerifyResetCode: any;
     onRequestResetPassword: any;
+    onDriverOnboarding: any;
 };
 
 const AuthContext = createContext({} as ContextType);
@@ -119,6 +121,27 @@ export default function AuthProvider({ children }: any) {
                 code: string;
                 new_password: string;
             }) => onResetPassword({ credential, code, new_password, setState }),
+            onDriverOnboarding: (data: {
+                car_plate: {
+                    numbers: string;
+                    letters: string;
+                };
+                car_model: string;
+                car_color: string;
+                active_period: {
+                    start: string;
+                    end: string;
+                };
+                active_all_day: boolean;
+                areas: {
+                    name: string;
+                    location: {
+                        longitude: number;
+                        latitude: number;
+                    };
+                }[];
+                setState: any;
+            }) => onDriverOnboarding({ ...data, setState }),
         }),
         [state]
     );

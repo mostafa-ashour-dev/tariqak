@@ -13,9 +13,6 @@ import { useAuth } from "context/auth/AuthContext";
 
 const Welcome = () => {
     const { nextStep, user, tokens } = useAuth();
-    console.log("🚀 ~ Welcome ~ tokens:", tokens);
-    console.log("🚀 ~ Welcome ~ user:", user);
-    console.log("🚀 ~ Welcome ~ nextStep:", nextStep);
 
     return (
         <View style={{ flexDirection: "column" }}>

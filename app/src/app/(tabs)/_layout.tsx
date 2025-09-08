@@ -15,9 +15,13 @@ export default function TabsLayout() {
         );
         NavigationBar.setButtonStyleAsync("dark");
     }, []);
-    if (nextStep === "WELCOME") {
-        router.replace("welcome");
-    }
+
+    useEffect(() => {
+        if (nextStep === "WELCOME") {
+            router.replace("/welcome");
+        }
+    }, [nextStep]);
+
     console.log(`tabs group mounted, ${nextStep}`);
     return (
         <SafeAreaView

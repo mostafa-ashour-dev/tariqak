@@ -30,13 +30,15 @@ function AppContent() {
                 <Stack.Screen name="(auth)" options={{ headerShown: false }} />
             </Stack>
         );
-    } else if (nextStep === "HOME") {
+    }
+    if (nextStep === "HOME") {
         return (
             <Stack screenOptions={{ headerShown: false }}>
                 <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             </Stack>
         );
-    } else if (nextStep === "WELCOME") {
+    }
+    if (nextStep === "WELCOME") {
         return (
             <Stack screenOptions={{ headerShown: false }}>
                 <Stack.Screen name="welcome" options={{ headerShown: false }} />
