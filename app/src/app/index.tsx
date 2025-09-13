@@ -18,19 +18,19 @@ const Welcome = () => {
                 style={{ width: "auto", height: "57%" }}
             />
             <View style={styles.container}>
-                <MainTitle style={{ marginTop: 1 }} fontSize={"50px"}>
+                <MainTitle style={{ marginTop: 1 }} fontSize={"55px"}>
                     طريقك
                 </MainTitle>
                 <Caption
                     fontSize="15px"
                     lineHeight="20px"
-                    style={{ paddingHorizontal: 15, width: "80%" }}
+                    style={{ width: "80%", textAlign: "center" }}
                 >
                     كل اللي محتاجه لعربيتك ... هتلاقيه في تطبيق طريقك.
                 </Caption>
                 <MainButton
                     onPress={() => router.push("/login")}
-                    style={{ marginTop: 30 }}
+                    style={{ marginTop: 25 }}
                 >
                     <MainButtonText>تسجيل دخول</MainButtonText>
                 </MainButton>
