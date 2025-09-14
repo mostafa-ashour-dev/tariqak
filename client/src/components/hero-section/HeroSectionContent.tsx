@@ -10,8 +10,8 @@ export default function HeroSectionContent() {
       </p>
       <div className="mt-[2rem] flex gap-[1rem]">
         <Btn link="#">تحميل التطبيق</Btn>
-        <Btn className="px-0 h-[2.8rem] w-[2.8rem] bg-surface border-surface shadow-[0_0_0_2px] shadow-surface">
-            <Download />
+        <Btn className="px-0 h-[2.8rem] w-[2.8rem] bg-surface border-surface shadow-[0_0_0_2px] shadow-surface text-text hover:text-primary hover:border-surface hover:shadow-surface">
+          <Download />
         </Btn>
       </div>
     </div>
