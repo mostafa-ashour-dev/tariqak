@@ -22,7 +22,7 @@
   --font-tajawal: "Tajawal", sans-serif;
 }
 
-/* @theme dark {
+@theme dark {
   --color-primary: #ff4250;
   --color-primary-light: #ff7a85;
   --color-primary-dark: #b52d38;
@@ -38,15 +38,28 @@
   --color-text: #f5f5f5;
   --color-subtext: #b0b0b0;
   --color-border: #2c2c2c;
-} */
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-body: #121212;
+    --color-surface: #1e1e1e;
+    --color-text: #f5f5f5;
+    --color-subtext: #b0b0b0;
+    --color-border: #2c2c2c;
+  }
+
+}
 
 ::-webkit-scrollbar {
   width: 5px;
   height: 5px;
 }
+
 ::-webkit-scrollbar-track {
-    background: var(--color-body);
+  background: var(--color-body);
 }
+
 ::-webkit-scrollbar-thumb {
   background: var(--color-body);
 }
@@ -69,6 +82,18 @@ body {
     @apply flex items-center justify-center gap-[.5rem] bg-primary text-white font-bold py-2 px-6 rounded-full cursor-pointer hover:bg-transparent hover:text-primary border-primary border-2 border-primary transition-all duration-300 active:opacity-50 hover:opacity-100;
   }
 
+  .btn-second {
+    @apply bg-text border-text mt-[1rem] text-secondary hover:bg-transparent hover:text-text;
+  }
+
+  .btn-third {
+    @apply bg-secondary border-secondary mt-[1rem] text-text hover:bg-transparent hover:text-secondary hover:border-secondary;
+  }
+
+  .btn-fourth {
+    @apply bg-text border-text mt-[1rem] text-primary hover:bg-transparent hover:text-text hover:border-text;
+  }
+
   .link {
     @apply cursor-pointer hover:text-secondary transition-all duration-300;
   }
@@ -87,5 +112,10 @@ body {
     height: 100%;
     background: linear-gradient(to bottom, var(--color-primary), var(--color-body));
     z-index: 1;
+  }
+
+  /*Section*/
+  .section {
+    @apply mb-[10rem] relative w-full flex flex-col items-center overflow-hidden justify-center gap-[1rem];
   }
 }

@@ -5,7 +5,7 @@ import HeroSectionViews from "./HeroSectionViews";
 
 export default function HeroSection() {
   return (
-    <section className="h-[110vh] relative flex items-center justify-between px-[2rem]">
+    <section className="h-[110vh] mb-[10rem] relative flex items-center justify-between px-[2rem]">
         <HeroSectionContent />
         <HeroSectionViews />
         {/* <FloatingIcon x={50} y={50}>
