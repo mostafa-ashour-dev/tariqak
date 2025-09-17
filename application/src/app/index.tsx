@@ -13,7 +13,7 @@ export default function Index() {
 
       <Heading className="w-[80%]" size="3xl" alignment="center">مرحبا بكم في تطبيق طريقك</Heading>
       <Btn link="/contact">
-          تواصل معنا
+          Contact
       </Btn>
 
       {/* <FlatList
