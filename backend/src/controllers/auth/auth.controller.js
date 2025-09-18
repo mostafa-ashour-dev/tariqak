@@ -3,11 +3,14 @@ import returnMissingFields from "../../utils/missing-fields.util";
 import User from "../../models/schemas/auth/user.model";
 import bcrypt from "bcryptjs";
 import ResponseError from "../../classes/response-error.class";
-import slugify from "slugify";
-import crypto from "crypto";
 import { generateToken } from "../../utils/generate-token.util";
 import Session from "../../models/schemas/auth/session.model";
 import Driver from "../../models/schemas/auth/driver.model";
+import normalizePhoneNumber from "../../helpers/auth/normalize-phone-number.helper";
+import generateUsername from "../../helpers/auth/generate-username.helper";
+import ResponseSuccess from "../../classes/response-success.class";
+import { NODE_ENV } from "../../config/env.config";
+import attachRoleData from "../../helpers/auth/attach-role-data.helper";
 
 const register = async (req, res) => {
     const { full_name, phone_number, email, password, role } = req.body || {};
@@ -30,30 +33,19 @@ const register = async (req, res) => {
 
     const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
     const ipData = await getIpData(ip);
-    const username =
-        slugify(full_name, {
-            lower: true,
-            strict: true,
-            remove: /[*+~.()'"!:@]/g,
-        }) +
-        "-" +
-        crypto.randomBytes(4).toString("hex");
+
+    const username = generateUsername(full_name);
 
     const existingUser = await User.findOne({
         $or: [{ email }, { phone_number }],
     });
+
     if (existingUser) {
         throw new ResponseError(400, "Input Error", "User already exists");
     }
 
-    let correctedPhoneNumber = phone_number;
-    if (phone_number.startsWith("20")) {
-        correctedPhoneNumber = phone_number.slice(2);
-    } else if (phone_number.startsWith("0")) {
-        correctedPhoneNumber = phone_number.slice(1);
-    }
-
     const hashedPassword = await bcrypt.hash(password, 10);
+    const correctedPhoneNumber = normalizePhoneNumber(phone_number);
 
     const newUser = await User.create({
         full_name,
@@ -67,14 +59,10 @@ const register = async (req, res) => {
         is_onboarded: role === "user" ? true : false,
     });
 
-    res.status(201).json({
-        success: true,
-        type: "success",
-        message: "User registered successfully",
-        data: {
-            user: newUser,
-        },
-    });
+
+    const response = new ResponseSuccess(true, "success", "User registered successfully", { user: newUser, })
+
+    res.status(201).json(response);
 };
 
 const requestVerificationCode = async (req, res) => {
@@ -94,14 +82,9 @@ const requestVerificationCode = async (req, res) => {
         throw new ResponseError(400, "Input Error", "Invalid type");
     }
 
-    if (type === "phone_number") {
-        if (credential.startsWith("20")) {
-            credential = credential.slice(2);
-        } else if (credential.startsWith("0")) {
-            credential = credential.slice(1);
-        }
-    }
-    const user = await User.findOne({ [type]: credential });
+    const correctedPhoneNumber = normalizePhoneNumber(credential);
+
+    const user = await User.findOne({ [type]: type === "phone_number" ? correctedPhoneNumber : credential });
     if (!user) {
         throw new ResponseError(400, "Input Error", "User not found");
     }
@@ -112,13 +95,14 @@ const requestVerificationCode = async (req, res) => {
 
     const code = await user.setRandomCode("verification_code");
 
-    console.log(type, code);
+    (function () {
+        if (NODE_ENV === "development") {
+            console.log("Verification code:", code);
+        }
+    } )();
+    const response = new ResponseSuccess(true, "success", "Verification code sent successfully", null);
 
-    res.status(200).json({
-        success: true,
-        type: "success",
-        message: "Verification code sent successfully",
-    });
+    res.status(200).json(response);
 };
 
 const verifyCode = async (req, res) => {
@@ -175,11 +159,10 @@ const verifyCode = async (req, res) => {
         type === "password-reset"
             ? "Password reset code verified successfully"
             : "User verified successfully";
-    res.status(200).json({
-        success: true,
-        type: "success",
-        message: message,
-    });
+
+    const response = new ResponseSuccess(true, "success", message, null);
+
+    res.status(200).json(response);
 };
 
 const refresh = async (req, res) => {
@@ -222,12 +205,8 @@ const refresh = async (req, res) => {
         },
     };
 
-    res.status(200).json({
-        success: true,
-        type: "success",
-        message: "Token refreshed successfully",
-        data,
-    });
+    const response = new ResponseSuccess(true, "success", "Token refreshed successfully", data);
+    res.status(200).json(response);
 };
 
 const login = async (req, res) => {
@@ -243,12 +222,7 @@ const login = async (req, res) => {
         );
     }
 
-    let correctedPhoneNumber = credential;
-    if (credential.startsWith("20")) {
-        correctedPhoneNumber = credential.slice(2);
-    } else if (credential.startsWith("0")) {
-        correctedPhoneNumber = credential.slice(1);
-    }
+    let correctedPhoneNumber = normalizePhoneNumber(credential);
 
     const user = await User.findOne({
         $or: [
@@ -301,7 +275,7 @@ const login = async (req, res) => {
     user.last_login = Date.now();
     await user.save();
 
-    const objUser = user.toJSON();
+    const objUser = await attachRoleData(user);
     delete objUser.password;
     delete objUser.verification_code;
     delete objUser.reset_password_code;
@@ -332,12 +306,9 @@ const login = async (req, res) => {
         },
     };
 
-    res.status(200).json({
-        success: true,
-        type: "success",
-        message: "User logged in successfully",
-        data,
-    });
+
+    const response = new ResponseSuccess(true, "success", "User logged in successfully", data);
+    res.status(200).json(response);
 };
 
 const logout = async (req, res) => {
@@ -352,13 +323,8 @@ const logout = async (req, res) => {
     }
 
     await Session.findByIdAndDelete(session._id);
-
-    res.status(200).json({
-        success: true,
-        type: "success",
-        message: "User logged out successfully",
-        data: null,
-    });
+    const response = new ResponseSuccess(true, "success", "User logged out successfully", null);
+    res.status(200).json(response);
 };
 
 const requestPasswordResetCode = async (req, res) => {
@@ -396,13 +362,14 @@ const requestPasswordResetCode = async (req, res) => {
 
     const code = await user.setRandomCode("password_reset");
 
-    console.log(type, code);
-    res.status(200).json({
-        success: true,
-        type: "success",
-        message: "Password reset code sent successfully",
-        data: null,
-    });
+    (function () {
+        if (NODE_ENV === "development") {
+            console.log(`code-${type}: ${code}`);
+        }
+    })();
+
+    const response = new ResponseSuccess(true, "success", "Password reset code sent successfully", null);
+    res.status(200).json(response);
 };
 
 const resetPassword = async (req, res) => {
@@ -449,12 +416,8 @@ const resetPassword = async (req, res) => {
     user.reset_password_expiration = undefined;
     await user.save();
 
-    res.status(200).json({
-        success: true,
-        type: "success",
-        message: "Password reset successfully",
-        data: null,
-    });
+    const response = new ResponseSuccess(true, "success", "Password reset successfully", null);
+    res.status(200).json(response);
 };
 
 export {
