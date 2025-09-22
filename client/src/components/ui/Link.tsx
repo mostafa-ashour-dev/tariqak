@@ -3,28 +3,25 @@ import NextLink from "next/link";
 
 type Props = {
     children?: React.ReactNode;
-    link?: string;
+    href?: string;
     text?: string;
+    className?: string
 }
 
 const httpsLinkRegex = /https?:\/\//;
 
-export default function Link({children, link, text}: Props) {
+export default function Link({children, href, text, className}: Props) {
 
-  if (httpsLinkRegex.test(link || "")) {
+  if (httpsLinkRegex.test(href || "")) {
     return (
-      <li>
-        <a href={link || "#"} className="link" target="_blank" rel="noopener noreferrer">
+        <a href={href || "#"} className={`link ${className || ""}`} target="_blank" rel="noopener noreferrer">
           {children || text}
         </a>
-      </li>
     );
   }
   return (
-    <li>
-      <NextLink className="link" href={link || "#"}>
-        {children || text}
-      </NextLink>
-    </li>
+    <NextLink className={`link ${className || ""}`} href={href || "#"}>
+      {children || text}
+    </NextLink>
   );
 }

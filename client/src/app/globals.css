@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -76,22 +77,21 @@ body {
   direction: rtl;
 }
 
-
 @layer components {
   .btn {
     @apply flex items-center justify-center gap-[.5rem] bg-primary text-white font-bold py-2 px-6 rounded-full cursor-pointer hover:bg-transparent hover:text-primary border-primary border-2 border-primary transition-all duration-300 active:opacity-50 hover:opacity-100;
   }
 
   .btn-second {
-    @apply bg-text border-text mt-[1rem] text-secondary hover:bg-transparent hover:text-text;
+    @apply bg-text border-text text-secondary hover:bg-transparent hover:text-text;
   }
 
   .btn-third {
-    @apply bg-secondary border-secondary mt-[1rem] text-text hover:bg-transparent hover:text-secondary hover:border-secondary;
+    @apply bg-secondary border-secondary text-text hover:bg-transparent hover:text-secondary hover:border-secondary;
   }
 
   .btn-fourth {
-    @apply bg-text border-text mt-[1rem] text-primary hover:bg-transparent hover:text-text hover:border-text;
+    @apply bg-text border-text text-primary hover:bg-transparent hover:text-text hover:border-text;
   }
 
   .link {
@@ -118,4 +118,9 @@ body {
   .section {
     @apply mb-[10rem] relative w-full flex flex-col items-center overflow-hidden justify-center gap-[1rem];
   }
+
+  .section-gap {
+    @apply gap-[3rem];
+  }
 }
+

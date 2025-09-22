@@ -7,10 +7,10 @@ import { features } from "@/constants/features.const";
 
 export default function FeaturesSection() {
   return (
-    <section className="section">
+    <section className="section section-gap">
       <SectionHeader>مزايا التطبيق</SectionHeader>
 
-      <div className="mt-[2rem] w-full flex items-center justify-center flex-col gap-[6rem]">
+      <div className="w-full flex items-center justify-center flex-col gap-[6rem]">
         
         {features && features.length > 0 ? features.map((feature, index) => {
           return (

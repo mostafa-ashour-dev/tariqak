@@ -5,17 +5,21 @@ import Link from "../../ui/Link";
 const links = [
   {
     name: "الصفحة الرئيسية",
-    href: "#"
+    href: "#",
   },
   {
     name: "عن التطبيق",
-    href: "#"
+    href: "#",
   },
   {
     name: "المزايا",
-    href: "#"
-  }
-]
+    href: "#",
+  },
+  {
+    name: "التقييمات",
+    href: "#",
+  },
+];
 
 export default function TopNavbar() {
   return (
@@ -33,7 +37,7 @@ export default function TopNavbar() {
 
         <ul className="flex items-center py-[1rem] gap-4">
           {links.map((link, index) => (
-            <Link key={index} text={link.name} link={link.href} />
+            <Link key={index} text={link.name} href={link.href} />
           ))}
         </ul>
 

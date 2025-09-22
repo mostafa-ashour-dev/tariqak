@@ -17,7 +17,8 @@ const tripSchema = new mongoose.Schema(
             enum: [
                 "pending",
                 "accepted",
-                "in_progress",
+                "heading_start",
+                "heading_end",
                 "completed",
                 "cancelled",
             ],

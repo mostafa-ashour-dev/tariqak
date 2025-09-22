@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Cairo, Tajawal } from "next/font/google";
 import "./globals.css";
 import TopNavbar from "@/components/navbars/top-navbar/TopNavbar";
-import FooterSection from "../components/footer/FooterSection";
+import FooterSection from "../components/footer-section/FooterSection";
 
 const cairo = Cairo({ subsets: ["latin"], variable: "--font-cairo" });
 const tajawal = Tajawal({ weight: ["500", "700", "800", "900", ], subsets: ["latin"], variable: "--font-tajawal" });
