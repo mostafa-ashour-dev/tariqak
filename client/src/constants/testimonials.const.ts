@@ -3,16 +3,6 @@ import { Testimonial } from "@/interfaces/testimonials.interface";
 export const testimonials: Testimonial[] = [
   {
     user: {
-      username: "أحمد علي",
-      avatar:
-        "https://www.placeholderimage.online/placeholder/50/50/f3f4f6/1f2937?font=Lato.svg",
-      role: "مستخدم",
-    },
-    content: "خدمة ممتازة جدًا 👌.",
-    createdAt: "2023-02-10",
-  },
-  {
-    user: {
       username: "سارة محمد",
       avatar:
         "https://www.placeholderimage.online/placeholder/50/50/f3f4f6/1f2937?font=Lato.svg",
@@ -21,8 +11,7 @@ export const testimonials: Testimonial[] = [
     content:
       "أنا مبسوط جدًا من التجربة دي. الواجهة سهلة جدًا والتجربة سلسة من أول تسجيل الدخول لحد ما خلصت اللي كنت محتاجه. فعلًا إضافة قوية!",
     createdAt: "2023-02-12",
-  },
-  {
+  },{
     user: {
       username: "عمر حسن",
       avatar:
@@ -31,6 +20,17 @@ export const testimonials: Testimonial[] = [
     },
     content: "تمام جدًا.",
     createdAt: "2023-02-15",
+  },
+  
+  {
+    user: {
+      username: "أحمد علي",
+      avatar:
+        "https://www.placeholderimage.online/placeholder/50/50/f3f4f6/1f2937?font=Lato.svg",
+      role: "مستخدم",
+    },
+    content: "خدمة ممتازة جدًا 👌.",
+    createdAt: "2023-02-10",
   },
   {
     user: {
@@ -50,7 +50,7 @@ export const testimonials: Testimonial[] = [
         "https://www.placeholderimage.online/placeholder/50/50/f3f4f6/1f2937?font=Lato.svg",
       role: "عضو",
     },
-    content: "سهل وسريع.",
+    content: "سهل وسريع. وجامد جدا وتطبيق جباااار واللي عاملينه تنانين مجنحة وأي حد يقول غير كدة يبقى شتيمة.",
     createdAt: "2023-02-20",
   },
   {

@@ -8,7 +8,7 @@ import Btn from "../ui/Btn";
 
 export default function TestimonialSection() {
   
-  const dividedArray = dividArray<Testimonial>(testimonials.slice(0, 9), 3);
+  const dividedArray = dividArray<Testimonial>(testimonials.slice(0, 6), 2);
 
   return(
     <section className="section section-gap">
