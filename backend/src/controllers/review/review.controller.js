@@ -1,5 +1,5 @@
 import User from "../../models/schemas/auth/user.model";
-import Driver from "../../models/schemas/auth/driver.model";
+import Driver from "../../models/schemas/roles/driver.model";
 import Workshop from "../../models/schemas/workshop/work-shop.model";
 import Review from "../../models/schemas/review/review.model";
 import ResponseError from "../../classes/response-error.class";

@@ -3,6 +3,7 @@ import Workshop from "../../models/schemas/workshop/work-shop.model";
 import ResponseError from "../../classes/response-error.class";
 import returnMissingFields from "../../utils/missing-fields.util";
 import paginateResults from "../../utils/paginate-results.util";
+import extractLocations from "../../helpers/locations-extractor.helper";
 
 const createWorkshop = async (req, res) => {
     const { user } = req;
@@ -136,8 +137,7 @@ const addWorkshopLocation = async (req, res) => {
     const { user } = req;
     const { workshopSlug } = req.params;
     const {
-        location: { latitude, longitude },
-        address,
+        location,
     } = req.body || {};
 
     if (!workshopSlug) {
@@ -145,6 +145,25 @@ const addWorkshopLocation = async (req, res) => {
             400,
             "Input Error",
             "Workshop slug is required"
+        );
+    }
+
+    const missingFields = returnMissingFields({ location });
+    
+        if (missingFields.length > 0) {
+            throw new ResponseError(
+                400,
+                "Input Error",
+                "Missing fields: " + missingFields.join(", ")
+            );
+        }
+    
+
+    if (!location?.coordinates?.latitude || !location?.coordinates?.longitude) {
+        throw new ResponseError(
+            400,
+            "Input Error",
+            "Location coordinates are required"
         );
     }
 
@@ -170,13 +189,7 @@ const addWorkshopLocation = async (req, res) => {
 
     await Workshop.findByIdAndUpdate(findWorkshop._id, {
         $push: {
-            locations: {
-                location: {
-                    type: "Point",
-                    coordinates: [longitude, latitude],
-                },
-                address,
-            },
+            locations: extractLocations([location])[0],
         },
     });
 

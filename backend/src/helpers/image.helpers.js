@@ -1,5 +1,5 @@
 import ResponseError from "../classes/response-error.class";
-import Driver from "../models/schemas/auth/driver.model";
+import Driver from "../models/schemas/roles/driver.model";
 import WorkShop from "../models/schemas/workshop/work-shop.model";
 import GasStation from "../models/schemas/gas-station/gas-station.model";
 import cloudinary from "../config/cloudinary.config";

@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import slugify from "slugify";
 import crypto from "crypto";
 import Review from "../review/review.model";
+import { locationSchema } from "../roles/driver.model";
 
 const gasStationSchema = mongoose.Schema({
     reference: {
@@ -48,25 +49,10 @@ const gasStationSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         default: null,
     },
-    locations: [
-        {
-            address: {
-                type: String,
-                trim: true,
-            },
-            location: {
-                type: {
-                    type: String,
-                    enum: ["Point"],
-                    default: "Point",
-                },
-                coordinates: {
-                    type: [Number],
-                    required: true,
-                },
-            },
-        },
-    ],
+    locations: {
+        type: [locationSchema],
+        default: [],
+    },
     services: [
         {
             title: {

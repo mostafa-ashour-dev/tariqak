@@ -5,6 +5,7 @@ import returnMissingFields from "../../utils/missing-fields.util.js";
 import paginateResults from "../../utils/paginate-results.util.js";
 import slugify from "slugify";
 import crypto from "crypto";
+import extractLocations from "../../helpers/locations-extractor.helper.js";
 
 const createGasStation = async (req, res) => {
     const { user } = req;
@@ -52,16 +53,7 @@ const createGasStation = async (req, res) => {
         title,
         title_slug,
         description,
-        locations: locations.map((currentLocation) => ({
-            location: {
-                type: "Point",
-                coordinates: [
-                    currentLocation.location.longitude,
-                    currentLocation.location.latitude,
-                ],
-            },
-            address: currentLocation.address,
-        })),
+        locations: extractLocations(locations),
         images,
         services,
         logo,
@@ -212,8 +204,7 @@ const addGasStationLocation = async (req, res) => {
     const { user } = req;
     const { gasStationSlug } = req.params;
     const {
-        location: { latitude, longitude },
-        address,
+        location,
     } = req.body || {};
 
     if (!gasStationSlug) {
@@ -224,7 +215,8 @@ const addGasStationLocation = async (req, res) => {
         );
     }
 
-    const missingFields = returnMissingFields({ latitude, longitude });
+
+    const missingFields = returnMissingFields({ location });
 
     if (missingFields.length > 0) {
         throw new ResponseError(
@@ -234,6 +226,13 @@ const addGasStationLocation = async (req, res) => {
         );
     }
 
+    if (!location.coordinates || !location?.coordinates?.latitude || !location?.coordinates?.longitude) {
+        throw new ResponseError(
+            400,
+            "Input Error",
+            "Location coordinates are required"
+        );
+    }
     const findUser = await User.findById(user._id);
     if (!findUser) {
         throw new ResponseError(400, "Input Error", "User not found");
@@ -262,13 +261,7 @@ const addGasStationLocation = async (req, res) => {
         { _id: findGasStation._id },
         {
             $push: {
-                locations: {
-                    location: {
-                        type: "Point",
-                        coordinates: [longitude, latitude],
-                    },
-                    address,
-                },
+                locations: extractLocations([location])[0],
             },
         }
     );

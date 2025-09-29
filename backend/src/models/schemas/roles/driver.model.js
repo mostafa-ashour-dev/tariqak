@@ -1,6 +1,29 @@
 import mongoose from "mongoose";
 import Review from "../review/review.model";
 
+
+export const locationSchema = new mongoose.Schema(
+    {
+        address: {
+            type: String,
+            trim: true,
+            default: "",
+        },
+        location: {
+            type: {
+                type: String,
+                enum: ["Point"],
+                required: true,
+            },
+            coordinates: {
+                type: [Number],
+                required: true,
+            },
+        },
+    },
+    { _id: false }
+);
+
 const driverSchema = mongoose.Schema(
     {
         user: {
@@ -57,24 +80,6 @@ const driverSchema = mongoose.Schema(
             type: String,
             trim: true,
         },
-        active_period: {
-            start: {
-                type: String,
-                trim: true,
-                match: /^([0-1]\d|2[0-3]):([0-5]\d)$/,
-                required: [true, "Driver active period start is required"],
-            },
-            end: {
-                type: String,
-                trim: true,
-                match: /^([0-1]\d|2[0-3]):([0-5]\d)$/,
-                required: [true, "Driver active period end is required"],
-            },
-        },
-        active_all_day: {
-            type: Boolean,
-            default: false,
-        },
         rating: {
             type: Number,
             default: 0,
@@ -83,6 +88,10 @@ const driverSchema = mongoose.Schema(
             type: Boolean,
             default: true,
         },
+        live_location: {
+            type: locationSchema,
+            default: null,
+        }
     },
     { timestamps: true }
 );

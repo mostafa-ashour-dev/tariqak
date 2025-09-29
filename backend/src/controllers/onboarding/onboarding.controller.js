@@ -1,7 +1,8 @@
 import ResponseError from "../../classes/response-error.class";
 import returnMissingFields from "../../utils/missing-fields.util";
 import User from "../../models/schemas/auth/user.model";
-import Driver from "../../models/schemas/auth/driver.model";
+import Driver from "../../models/schemas/roles/driver.model";
+import extractLocations from "../../helpers/locations-extractor.helper";
 
 const driverOnboarding = async (req, res) => {
     const { user } = req;
@@ -9,8 +10,6 @@ const driverOnboarding = async (req, res) => {
         car_plate,
         car_model,
         car_color,
-        active_period,
-        active_all_day,
         areas,
     } = req.body || {};
 
@@ -18,9 +17,6 @@ const driverOnboarding = async (req, res) => {
         car_plate,
         car_model,
         car_color,
-        active_period,
-        active_all_day,
-        areas,
     });
 
     if (missingFields.length > 0) {
@@ -56,15 +52,7 @@ const driverOnboarding = async (req, res) => {
         car_plate,
         car_model,
         car_color,
-        active_period,
-        active_all_day,
-        areas: areas.map((area) => ({
-            location: {
-                type: "Point",
-                coordinates: [area.location.longitude, area.location.latitude],
-            },
-            name: area.name,
-        })),
+        areas: extractLocations(areas),
     });
 
     existingUser.is_onboarded = true;

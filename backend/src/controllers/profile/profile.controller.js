@@ -1,10 +1,10 @@
 import ResponseError from "../../classes/response-error.class";
 import User from "../../models/schemas/auth/user.model";
-import Driver from "../../models/schemas/auth/driver.model";
+import Driver from "../../models/schemas/roles/driver.model";
 import returnMissingFields from "../../utils/missing-fields.util";
 import paginateResults from "../../utils/paginate-results.util";
 
-const getUserProfileAuth = async (req, res) => {
+const getUserProfileSelf = async (req, res) => {
     const { user } = req;
 
     const findUser = await User.findById(user._id).populate("avatar", "url public_id file_name");
@@ -208,7 +208,7 @@ const editDriverProfile = async (req, res) => {
                             area.location.coordinates.latitude,
                         ],
                     },
-                    name: area.name,
+                    address: area.address,
                 })),
             },
         }
@@ -266,7 +266,7 @@ const getNearbyDrivers = async (req, res) => {
 };
 
 export {
-    getUserProfileAuth,
+    getUserProfileSelf,
     getUserProfilePublic,
     editUserProfile,
     editDriverProfile,

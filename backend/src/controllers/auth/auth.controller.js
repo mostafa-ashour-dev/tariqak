@@ -7,7 +7,7 @@ import slugify from "slugify";
 import crypto from "crypto";
 import { generateToken } from "../../utils/generate-token.util";
 import Session from "../../models/schemas/auth/session.model";
-import Driver from "../../models/schemas/auth/driver.model";
+import Driver from "../../models/schemas/roles/driver.model";
 
 const register = async (req, res) => {
     const { full_name, phone_number, email, password, role } = req.body || {};

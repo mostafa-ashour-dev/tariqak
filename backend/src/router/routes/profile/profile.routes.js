@@ -5,7 +5,7 @@ import {
     editDriverProfile,
     editUserProfile,
     getNearbyDrivers,
-    getUserProfileAuth,
+    getUserProfileSelf,
     getUserProfilePublic,
 } from "../../../controllers/profile/profile.controller";
 
@@ -13,7 +13,7 @@ const router = Router();
 
 // Get User Profile Auth
 /* /api/v1/profile/auth - GET */
-router.get("/auth", authUser(), expressAsyncHandler(getUserProfileAuth));
+router.get("/self", authUser(), expressAsyncHandler(getUserProfileSelf));
 
 // Get User Profile Public
 /* /api/v1/profile/public/:username - GET */

@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import slugify from "slugify";
 import crypto from "crypto";
 import Review from "../review/review.model";
+import { locationSchema } from "../roles/driver.model";
 
 const workshopSchema = mongoose.Schema(
     {
@@ -63,25 +64,10 @@ const workshopSchema = mongoose.Schema(
             ref: "Image",
             default: null,
         },
-        locations: [
-            {
-                location: {
-                    type: {
-                        type: String,
-                        enum: ["Point"],
-                        default: "Point",
-                    },
-                    coordinates: {
-                        type: [Number],
-                        required: true,
-                    },
-                },
-                address: {
-                    type: String,
-                    trim: true,
-                },
-            },
-        ],
+        locations: {
+            type: [locationSchema],
+            default: [],
+        }
     },
     { timestamps: true }
 );
