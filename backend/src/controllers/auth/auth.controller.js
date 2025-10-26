@@ -9,6 +9,8 @@ import { generateToken } from "../../utils/generate-token.util";
 import Session from "../../models/schemas/auth/session.model";
 import Driver from "../../models/schemas/roles/driver.model";
 
+const SESSION_EXPIRATION_TIME = 7 * 24 * 60 * 60 * 1000;
+
 const register = async (req, res) => {
     const { full_name, phone_number, email, password, role } = req.body || {};
 
@@ -28,8 +30,10 @@ const register = async (req, res) => {
         );
     }
 
+    const device = req.headers["user-agent"];
     const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
     const ipData = await getIpData(ip);
+
     const username =
         slugify(full_name, {
             lower: true,
@@ -67,13 +71,36 @@ const register = async (req, res) => {
         is_onboarded: role === "user" ? true : false,
     });
 
+    const accessToken = generateToken({ user: newUser, type: "access" });
+    const refreshToken = generateToken({ user: newUser, type: "refresh" });
+
+    await await Session.create({
+        user: newUser._id,
+        refresh_token: refreshToken,
+        ip,
+        device,
+        expiresAt: new Date(Date.now() + SESSION_EXPIRATION_TIME),
+    });
+
+    const objUser = newUser.toJSON();
+    delete objUser.password;
+    delete objUser.verification_code;
+    delete objUser.reset_password_code;
+    delete objUser.reset_password_expiration;
+    delete objUser.verification_code_expiration;
+
+    const data = {
+        user: objUser,
+        tokens: {
+            access_token: accessToken,
+            refresh_token: refreshToken
+        },
+    };
     res.status(201).json({
         success: true,
         type: "success",
         message: "User registered successfully",
-        data: {
-            user: newUser,
-        },
+        data
     });
 };
 
@@ -212,7 +239,7 @@ const refresh = async (req, res) => {
     const refreshToken = generateToken({ user: findUser, type: "refresh" });
 
     session.refresh_token = refreshToken;
-    session.expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+    session.expiresAt = new Date(Date.now() + SESSION_EXPIRATION_TIME);
     await session.save();
 
     const data = {
@@ -285,7 +312,7 @@ const login = async (req, res) => {
         existingSession.ip = ip;
         existingSession.device = device;
         existingSession.expiresAt = new Date(
-            Date.now() + 7 * 24 * 60 * 60 * 1000
+            Date.now() +SESSION_EXPIRATION_TIME
         );
         await existingSession.save();
     } else {
@@ -294,7 +321,7 @@ const login = async (req, res) => {
             refresh_token: refreshToken,
             ip,
             device,
-            expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+            expiresAt: new Date(Date.now() +SESSION_EXPIRATION_TIME),
         });
     }
 

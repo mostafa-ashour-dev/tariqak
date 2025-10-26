@@ -8,7 +8,7 @@ const PATHS_WITH_NO_BODY = [
     "/v1/upload",
 ];
 
-const messingBodyMiddleware = (req, res, next) => {
+const missingBodyMiddleware = (req, res, next) => {
     const path = req.originalUrl.split("/");
     const prefexPath = "/" + path.splice(path.length - 2, 2).join("/");
     const deleteQuery = prefexPath.split("?")[0];
@@ -38,4 +38,4 @@ const messingBodyMiddleware = (req, res, next) => {
     next();
 };
 
-export default messingBodyMiddleware;
+export default missingBodyMiddleware;

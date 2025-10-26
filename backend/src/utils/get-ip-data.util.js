@@ -24,15 +24,24 @@ export async function getIpData(ip) {
         );
 
         if (!data || data.error) {
-            throw new ResponseError(
-                400,
-                "IP Lookup Error",
-                "Invalid or failed IP lookup."
-            );
+            return {
+                country_code: "EG",
+                country: "Egypt",
+                city: "Cairo",
+                latitude: 30.0444,
+                longitude: 31.2357,
+            };
         }
 
         return data;
     } catch (err) {
-        throw new ResponseError(500, "Server Error", err.message);
+        return {
+            country_code: "EG",
+            country: "Egypt",
+            city: "Cairo",
+            latitude: 30.0444,
+            longitude: 31.2357,
+        };
+
     }
 }
