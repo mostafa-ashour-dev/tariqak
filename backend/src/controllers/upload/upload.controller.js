@@ -3,7 +3,14 @@ import ResponseError from "../../classes/response-error.class";
 import cloudinary from "../../config/cloudinary.config";
 import User from "../../models/schemas/auth/user.model";
 import Image from "../../models/schemas/image/image.model";
-import { attachAvatar, attachDriverImage, attachGasStationImage, attachGasStationLogo, attachWorkshopImage, attachWorkshopLogo } from "../../helpers/image.helpers";
+import {
+    attachAvatar,
+    attachDriverImage,
+    attachGasStationImage,
+    attachGasStationLogo,
+    attachWorkshopImage,
+    attachWorkshopLogo,
+} from "../../helpers/image.helpers";
 
 const uploadImage = async (req, res) => {
     const { user, file } = req;
@@ -23,7 +30,11 @@ const uploadImage = async (req, res) => {
     const fileName = file.originalname;
     let resizedBuffer;
     try {
-        if (target === "user-avatar" || target === "workshop-logo" || target === "gas-station-logo") {
+        if (
+            target === "user-avatar" ||
+            target === "workshop-logo" ||
+            target === "gas-station-logo"
+        ) {
             resizedBuffer = await sharp(imageBuffer)
                 .resize({
                     width: 300,
@@ -31,7 +42,7 @@ const uploadImage = async (req, res) => {
                     fit: "cover",
                 })
                 .toBuffer();
-        } else if (target === "license-image" ) {
+        } else if (target === "license-image") {
             resizedBuffer = await sharp(imageBuffer)
                 .resize({
                     width: 600,
@@ -115,10 +126,7 @@ const uploadImage = async (req, res) => {
 
             newImage.reference = workshop._id;
             await newImage.save();
-        } else if (
-            findUser.role === "admin" &&
-            target === "gas-station-logo"
-        ) {
+        } else if (findUser.role === "admin" && target === "gas-station-logo") {
             if (!referenceSlug)
                 throw new ResponseError(
                     400,
@@ -132,8 +140,7 @@ const uploadImage = async (req, res) => {
             );
             newImage.reference = station._id;
             await newImage.save();
-        }
-        else if (
+        } else if (
             findUser.role === "admin" &&
             target === "gas-station-image"
         ) {

@@ -7,7 +7,10 @@ import paginateResults from "../../utils/paginate-results.util";
 const getUserProfileSelf = async (req, res) => {
     const { user } = req;
 
-    const findUser = await User.findById(user._id).populate("avatar", "url public_id file_name");
+    const findUser = await User.findById(user._id).populate(
+        "avatar",
+        "url public_id file_name"
+    );
     if (!findUser) {
         throw new ResponseError(400, "Input Error", "User not found");
     }
@@ -63,7 +66,10 @@ const getUserProfilePublic = async (req, res) => {
         );
     }
 
-    const findUser = await User.findOne({ username }).populate("avatar", "url public_id file_name");
+    const findUser = await User.findOne({ username }).populate(
+        "avatar",
+        "url public_id file_name"
+    );
     if (!findUser) {
         throw new ResponseError(400, "Input Error", "User not found");
     }

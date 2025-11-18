@@ -4,6 +4,7 @@ import ResponseError from "../../classes/response-error.class";
 import returnMissingFields from "../../utils/missing-fields.util";
 import paginateResults from "../../utils/paginate-results.util";
 import extractLocations from "../../helpers/locations-extractor.helper";
+import slugify from "slugify";
 
 const createWorkshop = async (req, res) => {
     const { user } = req;
@@ -24,27 +25,18 @@ const createWorkshop = async (req, res) => {
             "Missing fields: " + missingFields.join(", ")
         );
     }
-    const findUser = await User.findById(user._id);
-    if (!findUser) {
-        throw new ResponseError(400, "Input Error", "User not found");
-    }
-    if (findUser.role !== "admin") {
-        throw new ResponseError(
-            400,
-            "Input Error",
-            "Unauthorized access - Only admin can create a workshop"
-        );
-    }
 
-    await Workshop.create({
+    const newWorkshop = await Workshop.create({
         title,
         description,
         locations,
         images,
         services,
         logo,
-        user: findUser._id,
+        user: user._id,
     });
+
+    await newWorkshop.updateTitleSlug(title);
 
     res.status(201).json({
         success: true,
@@ -55,9 +47,9 @@ const createWorkshop = async (req, res) => {
 };
 
 const getWorkshop = async (req, res) => {
-    const { workshopSlug } = req.params;
+    const { title_slug } = req.params;
 
-    if (!workshopSlug) {
+    if (!title_slug) {
         throw new ResponseError(
             400,
             "Input Error",
@@ -65,9 +57,9 @@ const getWorkshop = async (req, res) => {
         );
     }
 
-    const findWorkshop = await Workshop.findOne({ title_slug: workshopSlug }).populate(
-        "images", "url public_id file_name"
-    );
+    const findWorkshop = await Workshop.findOne({
+        title_slug: title_slug,
+    }).populate("images", "url public_id file_q");
     if (!findWorkshop) {
         throw new ResponseError(400, "Input Error", "Workshop not found");
     }
@@ -81,11 +73,10 @@ const getWorkshop = async (req, res) => {
 };
 
 const editWorkshop = async (req, res) => {
-    const { user } = req;
-    const { workshopSlug } = req.params;
+    const { title_slug } = req.params;
     const { title, description, images, services, logo } = req.body || {};
 
-    if (!workshopSlug) {
+    if (!title_slug) {
         throw new ResponseError(
             400,
             "Input Error",
@@ -93,37 +84,21 @@ const editWorkshop = async (req, res) => {
         );
     }
 
-    const findUser = await User.findById(user._id);
-    if (!findUser) {
-        throw new ResponseError(400, "Input Error", "User not found");
-    }
-    if (findUser.role !== "admin") {
-        throw new ResponseError(
-            400,
-            "Input Error",
-            "Unauthorized access - Only admins can edit a workshop"
-        );
-    }
+    const findWorkshop = await Workshop.findOne({ title_slug });
 
-    const findWorkshop = await Workshop.findOne({
-        title_slug: workshopSlug,
-        user: findUser._id,
-    });
     if (!findWorkshop) {
         throw new ResponseError(400, "Input Error", "Workshop not found");
     }
 
-    if (title) {
-        await findWorkshop.updateTitleSlug(title);
-    }
-
-    await Workshop.findByIdAndUpdate(findWorkshop._id, {
+    const updatedWorkshop = await Workshop.findByIdAndUpdate(findWorkshop._id, {
         title,
         description,
         images,
         services,
         logo,
     });
+
+    await updatedWorkshop.updateTitleSlug(title);
 
     res.status(200).json({
         success: true,
@@ -135,12 +110,10 @@ const editWorkshop = async (req, res) => {
 
 const addWorkshopLocation = async (req, res) => {
     const { user } = req;
-    const { workshopSlug } = req.params;
-    const {
-        location,
-    } = req.body || {};
+    const { title_slug } = req.params;
+    const { location } = req.body || {};
 
-    if (!workshopSlug) {
+    if (!title_slug) {
         throw new ResponseError(
             400,
             "Input Error",
@@ -149,15 +122,14 @@ const addWorkshopLocation = async (req, res) => {
     }
 
     const missingFields = returnMissingFields({ location });
-    
-        if (missingFields.length > 0) {
-            throw new ResponseError(
-                400,
-                "Input Error",
-                "Missing fields: " + missingFields.join(", ")
-            );
-        }
-    
+
+    if (missingFields.length > 0) {
+        throw new ResponseError(
+            400,
+            "Input Error",
+            "Missing fields: " + missingFields.join(", ")
+        );
+    }
 
     if (!location?.coordinates?.latitude || !location?.coordinates?.longitude) {
         throw new ResponseError(
@@ -179,10 +151,7 @@ const addWorkshopLocation = async (req, res) => {
         );
     }
 
-    const findWorkshop = await Workshop.findOne({
-        title_slug: workshopSlug,
-        user: findUser._id,
-    });
+    const findWorkshop = await Workshop.findOne({ title_slug });
     if (!findWorkshop) {
         throw new ResponseError(400, "Input Error", "Workshop not found");
     }
@@ -202,10 +171,48 @@ const addWorkshopLocation = async (req, res) => {
 };
 
 const getWorkshops = async (req, res) => {
-    const { page = 1, limit = 10 } = req.query || {};
+    const {
+        page = 1,
+        limit = 10,
+        q = "",
+        services = "",
+        rating,
+    } = req.query || {};
+
+    const filters = {};
+
+    if (q) {
+        const slugifiedVersion = slugify(q, {
+            strict: true,
+            lowercase: true,
+            locale: "en",
+        });
+
+        filters.$or = [
+            { title: { $regex: q, $options: "i" } },
+            { description: { $regex: q, $options: "i" } },
+            { title_slug: { $regex: slugifiedVersion, $options: "i" } },
+        ];
+    }
+
+    if (services) {
+        const servicesArray = services.split(",");
+
+        filters.services = {
+            $elemMatch: {
+                title: { $in: servicesArray },
+            },
+        };
+    }
+
+    if (rating) {
+        const parsedRating = Number(rating);
+        if (!isNaN(parsedRating)) filters.rating = { $gte: parsedRating };
+    }
 
     const paginatedData = await paginateResults({
         model: Workshop,
+        query: filters,
         page: page,
         limit: limit,
     });
@@ -218,10 +225,43 @@ const getWorkshops = async (req, res) => {
     });
 };
 
+const deleteWorkshop = async (req, res) => {
+    const { user } = req;
+    const { title_slug } = req.params;
+
+    const findUser = await User.findById(user._id);
+    if (!findUser) {
+        throw new ResponseError(400, "Input Error", "User not found");
+    }
+    if (findUser.role !== "admin") {
+        throw new ResponseError(
+            400,
+            "Input Error",
+            "Unauthorized access - Only admins can edit a workshop"
+        );
+    }
+
+    const findWorkshop = Workshop.findOne({ title_slug });
+
+    if (!findWorkshop) {
+        throw new ResponseError(400, "Input Error", "Workshop not found");
+    }
+
+    await Workshop.findByIdAndDelete(findWorkshop._id);
+
+    res.status(200).json({
+        success: true,
+        type: "success",
+        message: "Workshop deleted successfully",
+        data: null,
+    });
+};
+
 export {
     createWorkshop,
     getWorkshop,
     getWorkshops,
     editWorkshop,
     addWorkshopLocation,
+    deleteWorkshop,
 };

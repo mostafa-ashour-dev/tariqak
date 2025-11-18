@@ -10,21 +10,21 @@ const paginateResults = async ({
     select = "",
 }) => {
     try {
+        if (!model)
+            throw new ResponseError(400, "Input Error", "Model is required");
+
         const skip = (parseInt(page, 10) - 1) * parseInt(limit, 10);
-        const results =
-            (model &&
-                (await model
-                    .find(query)
-                    .skip(skip)
-                    .limit(limit)
-                    .populate(populate, select)
-                    .lean())) ||
-            results ||
-            [];
-        const total =
-            (model && (await model.countDocuments())) ||
-            (results && results.length) ||
-            0;
+
+        const data = model
+            ? await model
+                  .find(query)
+                  .skip(skip)
+                  .limit(limit)
+                  .populate(populate, select)
+            : results;
+        const total = model
+            ? await model.countDocuments(query)
+            : results.length;
         const totalPages = Math.ceil(total / limit);
 
         const pageInfo = {
@@ -37,7 +37,7 @@ const paginateResults = async ({
             limit: parseInt(limit, 10),
             total_count: total,
             total_pages: totalPages,
-            results,
+            results: model ? data : results,
         };
 
         return resultsData;

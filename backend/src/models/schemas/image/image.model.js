@@ -26,12 +26,20 @@ const imageSchema = mongoose.Schema(
             type: String,
             required: [true, "Image type is required"],
             trim: true,
-            enum: ["user-avatar", "license-image", "car-image", "workshop-logo", "gas-station-logo", "workshop-image", "gas-station-image"],
+            enum: [
+                "user-avatar",
+                "license-image",
+                "car-image",
+                "workshop-logo",
+                "gas-station-logo",
+                "workshop-image",
+                "gas-station-image",
+            ],
         },
         reference: {
-           type: mongoose.Schema.Types.ObjectId,
-           default: null,
-        }
+            type: mongoose.Schema.Types.ObjectId,
+            default: null,
+        },
     },
     {
         timestamps: true,

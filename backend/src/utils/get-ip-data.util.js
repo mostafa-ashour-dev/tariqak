@@ -42,6 +42,5 @@ export async function getIpData(ip) {
             latitude: 30.0444,
             longitude: 31.2357,
         };
-
     }
 }

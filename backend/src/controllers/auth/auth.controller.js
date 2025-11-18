@@ -93,14 +93,14 @@ const register = async (req, res) => {
         user: objUser,
         tokens: {
             access_token: accessToken,
-            refresh_token: refreshToken
+            refresh_token: refreshToken,
         },
     };
     res.status(201).json({
         success: true,
         type: "success",
         message: "User registered successfully",
-        data
+        data,
     });
 };
 
@@ -312,7 +312,7 @@ const login = async (req, res) => {
         existingSession.ip = ip;
         existingSession.device = device;
         existingSession.expiresAt = new Date(
-            Date.now() +SESSION_EXPIRATION_TIME
+            Date.now() + SESSION_EXPIRATION_TIME
         );
         await existingSession.save();
     } else {
@@ -321,7 +321,7 @@ const login = async (req, res) => {
             refresh_token: refreshToken,
             ip,
             device,
-            expiresAt: new Date(Date.now() +SESSION_EXPIRATION_TIME),
+            expiresAt: new Date(Date.now() + SESSION_EXPIRATION_TIME),
         });
     }
 

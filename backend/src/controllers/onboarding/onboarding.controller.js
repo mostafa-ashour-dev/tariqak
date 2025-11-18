@@ -6,12 +6,7 @@ import extractLocations from "../../helpers/locations-extractor.helper";
 
 const driverOnboarding = async (req, res) => {
     const { user } = req;
-    const {
-        car_plate,
-        car_model,
-        car_color,
-        areas,
-    } = req.body || {};
+    const { car_plate, car_model, car_color, areas } = req.body || {};
 
     const missingFields = returnMissingFields({
         car_plate,

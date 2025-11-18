@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 import slugify from "slugify";
-import crypto from "crypto";
 import Review from "../review/review.model";
 import { locationSchema } from "../roles/driver.model";
 
@@ -67,7 +66,7 @@ const workshopSchema = mongoose.Schema(
         locations: {
             type: [locationSchema],
             default: [],
-        }
+        },
     },
     { timestamps: true }
 );
@@ -77,19 +76,19 @@ workshopSchema.index({ title: "text", description: "text" });
 workshopSchema.index({ title_slug: 1 }, { unique: true });
 
 workshopSchema.methods.updateTitleSlug = async function (newTitle) {
-    const slugifiedTitle = slugify(this.title, {
+
+    const slugifiedTitle = slugify(newTitle, {
         lower: true,
         strict: true,
         remove: /[*+~.()'"!:@]/g,
     });
 
-    if (this.title === newTitle) return;
-
-    const sufixedSlug =
-        slugifiedTitle + "-" + crypto.randomBytes(4).toString("hex");
+    const sufixedSlug = slugifiedTitle + "-" + this._id;
     this.title_slug = sufixedSlug;
 
     await this.save();
+
+    return sufixedSlug;
 };
 
 workshopSchema.methods.updateRating = async function () {

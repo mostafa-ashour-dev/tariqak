@@ -203,9 +203,7 @@ const editGasStation = async (req, res) => {
 const addGasStationLocation = async (req, res) => {
     const { user } = req;
     const { gasStationSlug } = req.params;
-    const {
-        location,
-    } = req.body || {};
+    const { location } = req.body || {};
 
     if (!gasStationSlug) {
         throw new ResponseError(
@@ -214,7 +212,6 @@ const addGasStationLocation = async (req, res) => {
             "Gas station slug is required"
         );
     }
-
 
     const missingFields = returnMissingFields({ location });
 
@@ -226,7 +223,11 @@ const addGasStationLocation = async (req, res) => {
         );
     }
 
-    if (!location.coordinates || !location?.coordinates?.latitude || !location?.coordinates?.longitude) {
+    if (
+        !location.coordinates ||
+        !location?.coordinates?.latitude ||
+        !location?.coordinates?.longitude
+    ) {
         throw new ResponseError(
             400,
             "Input Error",

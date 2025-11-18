@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 import Review from "../review/review.model";
 
-
 export const locationSchema = new mongoose.Schema(
     {
         address: {
@@ -91,7 +90,7 @@ const driverSchema = mongoose.Schema(
         live_location: {
             type: locationSchema,
             default: null,
-        }
+        },
     },
     { timestamps: true }
 );

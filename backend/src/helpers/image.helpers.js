@@ -6,7 +6,10 @@ import cloudinary from "../config/cloudinary.config";
 import Image from "../models/schemas/image/image.model";
 
 const attachAvatar = async (user, imageId) => {
-    const existingImage = await Image.findOne({ user: user._id, type: "user-avatar" });
+    const existingImage = await Image.findOne({
+        user: user._id,
+        type: "user-avatar",
+    });
     if (existingImage) {
         await cloudinary.uploader.destroy(existingImage.public_id);
         await Image.deleteOne({ _id: existingImage._id });
@@ -45,7 +48,11 @@ const attachWorkshopLogo = async (userId, slug, imageId) => {
         throw new ResponseError(400, "Input Error", "Workshop not found");
     }
 
-    const existingImage = await Image.findOne({ user: userId, type: "workshop-logo", reference: workshop._id });
+    const existingImage = await Image.findOne({
+        user: userId,
+        type: "workshop-logo",
+        reference: workshop._id,
+    });
     if (existingImage) {
         await cloudinary.uploader.destroy(existingImage.public_id);
         await Image.deleteOne({ _id: existingImage._id });
@@ -83,7 +90,11 @@ const attachGasStationLogo = async (userId, slug, imageId) => {
         throw new ResponseError(400, "Input Error", "Gas Station not found");
     }
 
-    const existingImage = await Image.findOne({ user: userId, type: "gas-station-logo", reference: station._id });
+    const existingImage = await Image.findOne({
+        user: userId,
+        type: "gas-station-logo",
+        reference: station._id,
+    });
     if (existingImage) {
         await cloudinary.uploader.destroy(existingImage.public_id);
         await Image.deleteOne({ _id: existingImage._id });

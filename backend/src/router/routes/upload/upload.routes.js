@@ -24,7 +24,4 @@ router.post(
     expressAsyncHandler(uploadImage)
 );
 
-
-
-
 export default router;
