@@ -10,89 +10,39 @@ const authUser =
     (role = "all", type = "access") =>
         async (req, res, next) => {
             const authorizationHeader = req.headers.authorization;
-            if (!authorizationHeader) {
-                throw new ResponseError(
-                    403,
-                    "Auth Error",
-                    "Unauthorized - No token"
-                );
-            }
-
-            if (!authorizationHeader.startsWith("Bearer ")) {
-                throw new ResponseError(
-                    403,
-                    "Auth Error",
-                    "Invalid authorization format"
-                );
+            if (!authorizationHeader?.startsWith("Bearer ")) {
+                throw new ResponseError(403, "Auth Error", "Unauthorized - Missing or invalid token");
             }
 
             const token = authorizationHeader.split(" ")[1];
 
             try {
-                const secret =
-                    type === "access" ? ACCESS_TOKEN_SECRET : REFRESH_TOKEN_SECRET;
-                const decodedUser = jwt.verify(token, secret);
+                const secret = type === "access" ? ACCESS_TOKEN_SECRET : REFRESH_TOKEN_SECRET;
+                const decoded = jwt.verify(token, secret);
 
-                if (!decodedUser) {
-                    throw new ResponseError(
-                        403,
-                        "Auth Error",
-                        "Unauthorized - Invalid token"
-                    );
-                }
+                const user = await User.findById(decoded._id).lean();
 
-                delete decodedUser.iat;
-                delete decodedUser.exp;
-
-                if (role && role !== "all" && decodedUser.role !== role) {
-                    throw new ResponseError(
-                        403,
-                        "Auth Error",
-                        `Unauthorized - User is not ${role}`
-                    );
-                }
-
-                const findUser = await User.findOne({ _id: decodedUser._id });
-
-                if (!findUser) {
+                if (!user) {
                     throw new ResponseError(400, "Input Error", "User not found");
                 }
 
-                if (findUser.role !== role) {
-                    throw new ResponseError(
-                        403,
-                        "Auth Error",
-                        `Unauthorized - User is not ${role}`
-                    );
+                if (role !== "all" && user.role !== role) {
+                    throw new ResponseError(403, "Auth Error", `Unauthorized - Only ${role} allowed`);
                 }
 
-                req.user = findUser;
+                delete user.password;
+                req.user = user;
 
             } catch (error) {
                 if (error.name === "TokenExpiredError") {
-                    throw new ResponseError(
-                        401,
-                        "Auth Error",
-                        "Unauthorized - Token expired"
-                    );
+                    throw new ResponseError(401, "Auth Error", "Token expired");
                 }
 
-                if (error.name === "JsonWebTokenError") {
-                    throw new ResponseError(
-                        403,
-                        "Auth Error",
-                        error.message || "Unauthorized - Invalid token"
-                    );
-                }
-
-                throw new ResponseError(
-                    403,
-                    "Auth Error",
-                    error.message || "Unable to verify token"
-                );
+                throw new ResponseError(403, "Auth Error", error.message || "Invalid token");
             }
 
             next();
         };
+
 
 export { authUser };
