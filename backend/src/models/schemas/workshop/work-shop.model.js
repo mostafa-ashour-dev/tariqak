@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
-import slugify from "slugify";
-import Review from "../review/review.model";
 import { locationSchema } from "../roles/driver.model";
+import { updateSlug } from "../../../helpers/update-slug.helper";
+import { updateRating } from "../../../helpers/update-rating.helper";
 
 const workshopSchema = mongoose.Schema(
     {
@@ -75,41 +75,9 @@ workshopSchema.index({ "locations.location": "2dsphere" });
 workshopSchema.index({ title: "text", description: "text" });
 workshopSchema.index({ title_slug: 1 }, { unique: true });
 
-workshopSchema.methods.updateTitleSlug = async function (newTitle) {
+workshopSchema.methods.updateTitleSlug = updateSlug;
 
-    const slugifiedTitle = slugify(newTitle, {
-        lower: true,
-        strict: true,
-        remove: /[*+~.()'"!:@]/g,
-    });
-
-    const sufixedSlug = slugifiedTitle + "-" + this._id;
-    this.title_slug = sufixedSlug;
-
-    await this.save();
-
-    return sufixedSlug;
-};
-
-workshopSchema.methods.updateRating = async function () {
-    const reviews = await Review.find({
-        "reference.type": "workshop",
-        "reference.target": this._id,
-    });
-
-    if (!reviews.length) {
-        this.rating = 0;
-        await this.save();
-        return;
-    }
-
-    const rating =
-        reviews.reduce((acc, review) => acc + review.rating, 0) /
-        reviews.length;
-
-    this.rating = rating;
-    await this.save();
-};
+workshopSchema.methods.updateRating = updateRating("workshop");
 
 const WorkShop = mongoose.model("WorkShop", workshopSchema);
 export default WorkShop;

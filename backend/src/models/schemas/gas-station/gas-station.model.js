@@ -1,8 +1,7 @@
 import mongoose from "mongoose";
-import slugify from "slugify";
-import crypto from "crypto";
-import Review from "../review/review.model";
 import { locationSchema } from "../roles/driver.model";
+import { updateSlug } from "../../../helpers/update-slug.helper";
+import { updateRating } from "../../../helpers/update-rating.helper";
 
 const gasStationSchema = mongoose.Schema({
     reference: {
@@ -81,41 +80,9 @@ gasStationSchema.index({ "locations.address": "text" });
 gasStationSchema.index({ "services.title": "text" });
 gasStationSchema.index({ title_slug: 1 }, { unique: true });
 
-gasStationSchema.methods.updateTitleSlug = async function (newTitle) {
-    const slugifiedTitle = slugify(this.title, {
-        lower: true,
-        strict: true,
-        remove: /[*+~()'"!:@]/g,
-    });
+gasStationSchema.methods.updateTitleSlug = updateSlug;
 
-    if (newTitle && this.title === newTitle) return;
-
-    const sufixedSlug =
-        slugifiedTitle + "-" + crypto.randomBytes(4).toString("hex");
-    this.title_slug = sufixedSlug;
-
-    await this.save();
-};
-
-gasStationSchema.methods.updateRating = async function () {
-    const reviews = await Review.find({
-        "reference.type": "gas-station",
-        "reference.target": this._id,
-    });
-
-    if (!reviews.length) {
-        this.rating = 0;
-        await this.save();
-        return;
-    }
-
-    const rating =
-        reviews.reduce((acc, review) => acc + review.rating, 0) /
-        reviews.length;
-
-    this.rating = rating;
-    await this.save();
-};
+gasStationSchema.methods.updateRating = updateRating("gas-station");
 
 const GasStation = mongoose.model("GasStation", gasStationSchema);
 export default GasStation;
