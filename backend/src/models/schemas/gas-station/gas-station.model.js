@@ -80,9 +80,13 @@ gasStationSchema.index({ "locations.address": "text" });
 gasStationSchema.index({ "services.title": "text" });
 gasStationSchema.index({ title_slug: 1 }, { unique: true });
 
-gasStationSchema.methods.updateTitleSlug = updateSlug;
+gasStationSchema.methods.updateTitleSlug = function (newTitle) {
+    return updateSlug(this, newTitle);
+};
 
-gasStationSchema.methods.updateRating = updateRating("gas-station");
+gasStationSchema.methods.updateRating = function () {
+    return updateRating(this, "gas-station");
+};
 
 const GasStation = mongoose.model("GasStation", gasStationSchema);
 export default GasStation;

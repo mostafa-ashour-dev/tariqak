@@ -248,16 +248,12 @@ const getNearbyDrivers = async (req, res) => {
         model: Driver,
         populate: "user",
         select: "username full_name phone_number email avatar role",
-        query: {
-            "areas.location": {
-                $near: {
-                    $geometry: {
-                        type: "Point",
-                        coordinates: [longitude, latitude],
-                    },
-                    $maxDistance: radius * 1000,
-                },
-            },
+        geo: {
+            path: "areas.location",
+            longitude,
+            latitude,
+            maxDistance: radius * 1000,
+            distanceField: "distance",
         },
         page: page,
         limit: limit,

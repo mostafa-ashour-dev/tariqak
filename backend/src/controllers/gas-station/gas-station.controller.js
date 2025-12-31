@@ -117,16 +117,12 @@ const getNearbyStations = async (req, res) => {
 
     const paginatedData = await paginateResults({
         model: GasStation,
-        query: {
-            "locations.location": {
-                $near: {
-                    $geometry: {
-                        type: "Point",
-                        coordinates: [longitude, latitude],
-                    },
-                    $maxDistance: radius * 1000,
-                },
-            },
+        geo: {
+            longitude,
+            latitude,
+            maxDistance: radius * 1000,
+            path: "locations.location",
+            distanceField: "distance",
         },
         page: page,
         limit: limit,

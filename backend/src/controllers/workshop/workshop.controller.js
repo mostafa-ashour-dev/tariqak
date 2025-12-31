@@ -212,7 +212,9 @@ const getWorkshops = async (req, res) => {
 
     const paginatedData = await paginateResults({
         model: Workshop,
-        query: filters,
+        query: {
+            find: filters,
+        },
         page: page,
         limit: limit,
     });

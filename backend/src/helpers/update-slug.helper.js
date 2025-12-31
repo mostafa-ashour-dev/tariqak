@@ -1,9 +1,12 @@
-import slugify from "slugify"
+import slugify from "slugify";
 
-const updateSlug = async function (newTitle) {
-
+const updateSlug = async function (doc, newTitle) {
     if (!newTitle || typeof newTitle !== "string") {
-        throw new ResponseError(400, "Server Error", "New title is required to update slug");
+        throw new ResponseError(
+            400,
+            "Server Error",
+            "New title is required to update slug"
+        );
     }
 
     const slugifiedTitle = slugify(newTitle, {
@@ -12,13 +15,12 @@ const updateSlug = async function (newTitle) {
         remove: /[*+~.()'"!:@]/g,
     });
 
-    const sufixedSlug = slugifiedTitle + "-" + this._id;
-    this.title_slug = sufixedSlug;
+    const sufixedSlug = slugifiedTitle + "-" + doc._id;
+    doc.title_slug = sufixedSlug;
 
-    await this.save();
+    await doc.save();
 
     return sufixedSlug;
 };
-
 
 export { updateSlug };

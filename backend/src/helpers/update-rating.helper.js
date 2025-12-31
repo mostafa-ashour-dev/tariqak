@@ -1,24 +1,30 @@
 import Review from "../models/schemas/review/review.model";
 
-const updateRating = async function (referenceType) {
-
+const updateRating = async function (doc, referenceType) {
     if (!referenceType) {
-        throw new ResponseError(400, "Server Error", "Reference type is required to update rating");
+        throw new ResponseError(
+            400,
+            "Server Error",
+            "Reference type is required to update rating"
+        );
     }
 
-
     if (!["gas-station", "workshop"].includes(referenceType)) {
-        throw new ResponseError(400, "Server Error", "Invalid reference type for updating rating");
+        throw new ResponseError(
+            400,
+            "Server Error",
+            "Invalid reference type for updating rating"
+        );
     }
 
     const reviews = await Review.find({
         "reference.type": referenceType,
-        "reference.target": this._id,
+        "reference.target": doc._id,
     });
 
     if (!reviews.length) {
-        this.rating = 0;
-        await this.save();
+        doc.rating = 0;
+        await doc.save();
         return;
     }
 
@@ -26,8 +32,8 @@ const updateRating = async function (referenceType) {
         reviews.reduce((acc, review) => acc + review.rating, 0) /
         reviews.length;
 
-    this.rating = Math.round(rating * 10) / 10;
-    await this.save();
+    doc.rating = Math.round(rating * 10) / 10;
+    await doc.save();
 };
 
 export { updateRating };

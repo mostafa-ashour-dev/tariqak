@@ -138,11 +138,13 @@ const getTargetReviews = async (req, res) => {
         reviews = await paginateResults({
             model: Review,
             query: {
-                "reference.type": "driver",
-                "reference.target": findDriver._id,
+                find: {
+                    "reference.type": "driver",
+                    "reference.target": findDriver._id,
+                },
+                populate: "user",
+                select: "username full_name avatar role",
             },
-            populate: "user",
-            select: "username full_name avatar role",
         });
     } else if (referenceType === "workshop") {
         const findWorkshop = await Workshop.findOne({ title_slug: target });
@@ -153,11 +155,13 @@ const getTargetReviews = async (req, res) => {
         reviews = await paginateResults({
             model: Review,
             query: {
-                "reference.type": "workshop",
-                "reference.target": findWorkshop._id,
+                find: {
+                    "reference.type": "workshop",
+                    "reference.target": findWorkshop._id,
+                },
+                populate: "user",
+                select: "username full_name avatar role",
             },
-            populate: "user",
-            select: "username full_name avatar role",
         });
     } else if (referenceType === "gas-station") {
         const findGasStation = await GasStation.findOne({ title_slug: target });
@@ -172,11 +176,13 @@ const getTargetReviews = async (req, res) => {
         reviews = await paginateResults({
             model: Review,
             query: {
-                "reference.type": "gas-station",
-                "reference.target": findGasStation._id,
+                find: {
+                    "reference.type": "gas-station",
+                    "reference.target": findGasStation._id,
+                },
+                populate: "user",
+                select: "username full_name avatar role",
             },
-            populate: "user",
-            select: "username full_name avatar role",
         });
     }
 

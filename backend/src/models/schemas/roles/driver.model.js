@@ -11,7 +11,7 @@ export const locationSchema = new mongoose.Schema(
         location: {
             type: {
                 type: String,
-                enum: ["Point"],
+                enum: ["Point", "Polygon"],
                 required: true,
             },
             coordinates: {
@@ -55,22 +55,7 @@ const driverSchema = mongoose.Schema(
             default: null,
             trim: true,
         },
-        areas: [
-            {
-                name: String,
-                location: {
-                    type: {
-                        type: String,
-                        enum: ["Point"],
-                        required: true,
-                    },
-                    coordinates: {
-                        type: [Number],
-                        required: true,
-                    },
-                },
-            },
-        ],
+        areas: [locationSchema],
         car_model: {
             type: String,
             trim: true,

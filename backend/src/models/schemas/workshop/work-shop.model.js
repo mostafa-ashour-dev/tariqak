@@ -75,9 +75,13 @@ workshopSchema.index({ "locations.location": "2dsphere" });
 workshopSchema.index({ title: "text", description: "text" });
 workshopSchema.index({ title_slug: 1 }, { unique: true });
 
-workshopSchema.methods.updateTitleSlug = updateSlug;
+workshopSchema.methods.updateTitleSlug = function (newTitle) {
+    return updateSlug(this, newTitle);
+};
 
-workshopSchema.methods.updateRating = updateRating("workshop");
+workshopSchema.methods.updateRating = function () {
+    return updateRating(this, "workshop");
+};
 
 const WorkShop = mongoose.model("WorkShop", workshopSchema);
 export default WorkShop;

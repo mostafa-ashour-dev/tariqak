@@ -10,7 +10,7 @@ import {
     attachGasStationLogo,
     attachWorkshopImage,
     attachWorkshopLogo,
-} from "../../helpers/image.helpers";
+} from "../../helpers/image.helper";
 
 const uploadImage = async (req, res) => {
     const { user, file } = req;
