@@ -60,7 +60,8 @@ const paginateResults = async ({
         }
 
         const pageInfo = {
-            next_page: page * limit < totalCount ? { page: page + 1, limit } : null,
+            next_page:
+                page * limit < totalCount ? { page: page + 1, limit } : null,
             prev_page: page > 1 ? { page: page - 1, limit } : null,
         };
 
