@@ -13,14 +13,15 @@ const server = http.createServer(app);
 const origins = [
     "http://localhost:3000",
     "http://localhost:8081",
-    "http://127.0.0.1:3000",
-    "http://127.0.0.1:8081",
+    "http://localhost:5173",
 ];
 // Middlewares
 app.use(
     cors({
         origin: origins,
         credentials: true,
+        methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+        allowedHeaders: ["Content-Type", "Authorization"],
     })
 );
 app.use(express.json());
